@@ -30,6 +30,7 @@
         // Obtener el país con la mayor cantidad de repeticiones
         const maxCount = d3.max(topCountries.map(d => countryCounts[d]));
 
+
         // Representar la gráfica de telaraña
         const width = 500;
         const height = 500;
@@ -65,7 +66,7 @@
           .attr("class", "circle")
           .attr("cx", 0)
           .attr("cy", 0)
-          .attr("r", (d) => radiusScale(totalCount) * 0.1 * d)
+          .attr("r", (d) => radiusScale(totalCount) * 10 * d)
           .style("fill", "none")
           .style("stroke", "black")
           .style("stroke-width", "3px")
