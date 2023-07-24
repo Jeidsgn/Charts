@@ -59,17 +59,20 @@
           .style("opacity", "0.4");
 
         // Crear los ejes circulares (círculos tangenciales)
-        const circles = axes.selectAll(".circle")
-          .data(d3.range(0, 1.1, 0.1))
+        const circles = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
+
+        circles
+          .selectAll(".circle-axis")
+          .data(d3.range(1, 11)) // Crear 10 ejes circulares (del 10% al 100%)
           .enter()
           .append("circle")
-          .attr("class", "circle")
+          .attr("class", "circle-axis")
           .attr("cx", 0)
           .attr("cy", 0)
-          .attr("r", (d) => radiusScale(totalCount) * 10 * d)
-          .style("fill", "none")
+          .attr("r", (d) => radiusScale(totalCount) * 0.1 * d)
           .style("stroke", "black")
           .style("stroke-width", "3px")
+          .style("fill", "none")
           .style("opacity", "0.4");
 
         // Crear el área sombreada que une los países
