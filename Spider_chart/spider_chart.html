@@ -30,9 +30,6 @@
         // Obtener el país con la mayor cantidad de repeticiones
         const maxCount = d3.max(topCountries.map(d => countryCounts[d]));
 
-        // Obtener el total de repeticiones de todos los países
-        const totalCount = Object.values(countryCounts).reduce((acc, count) => acc + count, 0);
-
         // Calcular el porcentaje que corresponde del máximo repetido con respecto a la totalidad de datos
         const maxCountPercent = (maxCount / totalCount) * 100;
         console.log(totalCount)
@@ -47,6 +44,8 @@
         // Escalas
         const angleScale = d3.scaleBand().domain(topCountries).range([0, Math.PI * 2]);
         const radiusScale = d3.scaleLinear().domain([0, maxCount]).range([0, height / 3]);
+        // Calcular el total de repeticiones en la gráfica
+        const totalCount = topCountries.reduce((acc, country) => acc + countryCounts[country], 0);
 
         // Crear los ejes radiales
         const axes = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
@@ -72,7 +71,7 @@
           .attr("class", "circle")
           .attr("cx", 0)
           .attr("cy", 0)
-          .attr("r", d => radiusScale(maxCountPercent) * d)
+          .attr("r", (d) => radiusScale(totalCount) * 0.1 * d)
           .style("fill", "none")
           .style("stroke", "black")
           .style("stroke-width", "3px")
