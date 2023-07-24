@@ -30,12 +30,6 @@
         // Obtener el país con la mayor cantidad de repeticiones
         const maxCount = d3.max(topCountries.map(d => countryCounts[d]));
 
-        // Calcular el porcentaje que corresponde del máximo repetido con respecto a la totalidad de datos
-        const maxCountPercent = (maxCount / totalCount) * 100;
-        console.log(totalCount)
-        console.log(maxCount)
-        console.log(maxCountPercent)
-
         // Representar la gráfica de telaraña
         const width = 500;
         const height = 500;
