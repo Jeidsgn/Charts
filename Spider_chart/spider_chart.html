@@ -69,7 +69,7 @@
           .attr("class", "circle-axis")
           .attr("cx", 0)
           .attr("cy", 0)
-          .attr("r", (d) => radiusScale(totalCount) * 0.1 * d)
+          .attr("r", (d) => Math.min(radiusScale(totalCount) * 0.1 * d, radiusScale(maxCount)))
           .style("stroke", "black")
           .style("stroke-width", "3px")
           .style("fill", "none")
