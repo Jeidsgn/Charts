@@ -39,7 +39,7 @@
         // Escalas
         const angleScale = d3.scaleBand().domain(topCountries).range([0, Math.PI * 2]);
         const radiusScale = d3.scaleLinear().domain([0, maxCount]).range([0, height / 3]);
-        
+
         // Calcular el total de repeticiones en la gráfica
         const totalCount = topCountries.reduce((acc, country) => acc + countryCounts[country], 0);
 
@@ -70,7 +70,9 @@
           .attr("class", "circle-axis")
           .attr("cx", 0)
           .attr("cy", 0)
-          .attr("r", (d) => Math.min(radiusScale(totalCount) * 0.1 * d, radiusScale(maxCount)))
+          .attr("r", (d) => {const circleRadius = radiusScale(totalCount) * 0.1 * d;
+                            return circleRadius <= radiusScale(maxCount) ? circleRadius : 0; // Establecer el radio a 0 si es mayor al radio máximo
+                            })
           .style("stroke", "black")
           .style("stroke-width", "3px")
           .style("fill", "none")
