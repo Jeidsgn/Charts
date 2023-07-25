@@ -39,6 +39,7 @@
         // Escalas
         const angleScale = d3.scaleBand().domain(topCountries).range([0, Math.PI * 2]);
         const radiusScale = d3.scaleLinear().domain([0, maxCount]).range([0, height / 3]);
+        
         // Calcular el total de repeticiones en la gráfica
         const totalCount = topCountries.reduce((acc, country) => acc + countryCounts[country], 0);
 
