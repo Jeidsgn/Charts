@@ -10,19 +10,13 @@
 
   <script>
     // Carga el archivo JSON
-    fetch('../data.json')
-      .then(response => response.json())
-      .then(data => {
-        const countries = data.Countries;
+    d3.json("../data.json").then((data) => {
+      const countryCounts = {};
 
-        // Carga y procesamiento de datos
-        const countryCounts = {};
-        countries.forEach(d => {
-          if (!countryCounts[d]) {
-            countryCounts[d] = 0;
-          }
-          countryCounts[d]++;
-        });
+      data.forEach((d) => {
+        const country = d.País;
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
+      });
 
         // Obtener el top 10 de países más repetidos
         const topCountries = Object.keys(countryCounts).sort((a, b) => countryCounts[b] - countryCounts[a]).slice(0, 10);
