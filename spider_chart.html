@@ -3,6 +3,7 @@
 <head>
   <title>Gráfica de Telaraña con D3.js</title>
   <meta charset="utf-8">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -11,6 +12,7 @@
   <script>
     // Carga el archivo CSV
     d3.csv("data.csv").then((data) => {
+      console.log(data)
       const countryCounts = {};
 
       data.forEach((d) => {
