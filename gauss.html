@@ -31,26 +31,29 @@
       const binsGenerator = d3.bin().domain(xScale.domain()).thresholds(20);
       const bins = binsGenerator(scores);
 
-      // Escala para el eje y que muestra la cantidad de datos en cada bin
-      const yScaleHistogram = d3
-        .scaleLinear()
-        .domain([0, d3.max(bins, (d) => d.length)])
-        .range([height - margin.bottom, margin.top]);
+      // Función de densidad de probabilidad de Gauss
+      const gaussian = (x, mean, stdDev) =>
+        Math.exp(-((x - mean) ** 2) / (2 * stdDev ** 2)) / (stdDev * Math.sqrt(2 * Math.PI));
 
-      const barWidth = (xScale(bins[0].x1) - xScale(bins[0].x0)) * 0.8;
+      // Calcular el valor máximo de la curva de Gauss para ajustar la escala del eje y
+      const maxGaussianValue = d3.max(bins, (bin) => gaussian(bin.x0, averageScore, d3.deviation(scores)));
 
-      // Crear las barras para la distribución de Gauss
-      const bars = svg
-        .selectAll("rect")
-        .data(bins)
-        .enter()
-        .append("rect")
-        .attr("x", (d) => xScale(d.x0))
-        .attr("y", (d) => yScaleHistogram(d.length))
-        .attr("width", barWidth)
-        .attr("height", (d) => height - margin.bottom - yScaleHistogram(d.length))
-        .attr("fill", "#4B92E5")
-        .attr("opacity", "0.7");
+      // Escala para el eje y de la curva de Gauss
+      const yScaleGaussian = d3.scaleLinear().domain([0, maxGaussianValue]).range([height - margin.bottom, margin.top]);
+
+      // Generar los puntos para la curva de Gauss
+      const curveData = d3.range(0, maxScore, 1).map((x) => ({ x, y: gaussian(x, averageScore, d3.deviation(scores)) }));
+
+      // Crear la línea curva de Gauss
+      const line = d3.line().x((d) => xScale(d.x)).y((d) => yScaleGaussian(d.y));
+
+      svg
+        .append("path")
+        .datum(curveData)
+        .attr("fill", "none")
+        .attr("stroke", "#4B92E5")
+        .attr("stroke-width", 2)
+        .attr("d", line);
 
       // Crear la línea vertical para el promedio
       const averageLine = svg
@@ -96,11 +99,11 @@
         .call(xAxis);
 
       // Eje y para la distribución de Gauss
-      const yAxisHistogram = d3.axisLeft(yScaleHistogram).ticks(5);
+      const yAxisGaussian = d3.axisLeft(yScaleGaussian).ticks(5);
       svg
         .append("g")
         .attr("transform", `translate(${margin.left},0)`)
-        .call(yAxisHistogram);
+        .call(yAxisGaussian);
 
       // Etiqueta para el eje y de la distribución de Gauss
       svg
@@ -110,7 +113,7 @@
         .attr("x", 0 - height / 2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Cantidad de Datos");
+        .text("Densidad de Probabilidad");
 
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
