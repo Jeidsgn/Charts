@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gráfica de Gauss con D3.js</title>
+  <meta charset="utf-8">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <svg id="chart" width="600" height="400" style="padding: 40px;"></svg>
+
+  <script>
+    // Carga el archivo CSV
+    d3.csv("data.csv").then((data) => {
+      // Obtener el promedio y puntaje máximo de los datos
+      const scores = data.map((d) => +d.Score); // Convertir los puntajes a números
+      const averageScore = d3.mean(scores);
+      const maxScore = d3.max(scores);
+
+      // Crear la gráfica de Gauss
+      const width = 600;
+      const height = 400;
+      const margin = { top: 30, right: 30, bottom: 50, left: 50 };
+      const svg = d3.select("#chart");
+
+      // Escalas
+      const xScale = d3.scaleLinear().domain([0, maxScore]).range([margin.left, width - margin.right]);
+      const yScale = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.length)]).range([height - margin.bottom, margin.top]);
+
+      // Generar una aproximación de la distribución de Gauss
+      const binsGenerator = d3.bin().domain(xScale.domain()).thresholds(20);
+      const bins = binsGenerator(scores);
+
+      // Escala para el eje y que muestra la cantidad de datos en cada bin
+      const yScaleHistogram = d3
+        .scaleLinear()
+        .domain([0, d3.max(bins, (d) => d.length)])
+        .range([height - margin.bottom, margin.top]);
+
+      const barWidth = (xScale(bins[0].x1) - xScale(bins[0].x0)) * 0.8;
+
+      // Crear las barras para la distribución de Gauss
+      const bars = svg
+        .selectAll("rect")
+        .data(bins)
+        .enter()
+        .append("rect")
+        .attr("x", (d) => xScale(d.x0))
+        .attr("y", (d) => yScaleHistogram(d.length))
+        .attr("width", barWidth)
+        .attr("height", (d) => height - margin.bottom - yScaleHistogram(d.length))
+        .attr("fill", "#4B92E5")
+        .attr("opacity", "0.7");
+
+      // Crear la línea vertical para el promedio
+      const averageLine = svg
+        .append("line")
+        .attr("x1", xScale(averageScore))
+        .attr("y1", margin.top)
+        .attr("x2", xScale(averageScore))
+        .attr("y2", height - margin.bottom)
+        .attr("stroke", "red")
+        .attr("stroke-width", "2px");
+
+      // Etiqueta del promedio
+      svg
+        .append("text")
+        .attr("x", xScale(averageScore) + 10)
+        .attr("y", margin.top - 10)
+        .attr("fill", "red")
+        .text(`Promedio: ${averageScore.toFixed(2)}`);
+
+      // Línea vertical para el puntaje máximo
+      const maxLine = svg
+        .append("line")
+        .attr("x1", xScale(maxScore))
+        .attr("y1", margin.top)
+        .attr("x2", xScale(maxScore))
+        .attr("y2", height - margin.bottom)
+        .attr("stroke", "green")
+        .attr("stroke-width", "2px");
+
+      // Etiqueta para el puntaje máximo
+      svg
+        .append("text")
+        .attr("x", xScale(maxScore) - 70)
+        .attr("y", margin.top - 10)
+        .attr("fill", "green")
+        .text(`Score Máximo: ${maxScore}`);
+
+      // Eje x
+      const xAxis = d3.axisBottom(xScale);
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(xAxis);
+
+      // Eje y para la distribución de Gauss
+      const yAxisHistogram = d3.axisLeft(yScaleHistogram).ticks(5);
+      svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(yAxisHistogram);
+
+      // Etiqueta para el eje y de la distribución de Gauss
+      svg
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", margin.left - 40)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Cantidad de Datos");
+
+    })
+    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
+  </script>
+</body>
+</html>
