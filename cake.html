@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gráfica de Torta con D3.js</title>
+  <meta charset="utf-8">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <svg id="chart" width="500" height="500" style="padding: 40px;"></svg>
+
+  <script>
+    // Carga el archivo CSV
+    d3.csv("data.csv").then((data) => {
+      // Calcular el total de registros para obtener los porcentajes
+      const totalRecords = data.length;
+
+      // Obtener el conteo de idiomas
+      const languageCounts = {};
+      data.forEach((d) => {
+        const language = d.Idioma;
+        languageCounts[language] = (languageCounts[language] || 0) + 1;
+      });
+
+      // Convertir el objeto de conteo en un arreglo de objetos
+      const languageData = Object.keys(languageCounts).map((language) => ({
+        language,
+        count: languageCounts[language],
+        percentage: (languageCounts[language] / totalRecords) * 100,
+      }));
+
+      // Crear la gráfica de torta
+      const width = 500;
+      const height = 500;
+      const radius = Math.min(width, height) / 2;
+      const svg = d3.select("#chart");
+
+      const pie = d3.pie().value((d) => d.count);
+
+      const arc = d3.arc().innerRadius(0).outerRadius(radius);
+
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
+
+      const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
+
+      arcs
+        .append("path")
+        .attr("d", arc)
+        .attr("fill", (d) => color(d.data.language))
+        .attr("stroke", "white")
+        .style("stroke-width", "2px");
+
+      arcs
+        .append("text")
+        .attr("transform", (d) => `translate(${arc.centroid(d)})`)
+        .attr("dy", "0.35em")
+        .style("text-anchor", "middle")
+        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(2)}%)`);
+    })
+    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
+  </script>
+</body>
+</html>
