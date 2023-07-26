@@ -110,15 +110,15 @@
         .attr("fill", "black")
         .text(`Score Máximo: ${maxScore}`);
 
-      // Eje x
-      const xAxis = d3.axisBottom(xScale).tickSize(0).tickPadding(10);
+      // Eje x (sin ticks y números)
+      const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
       svg
         .append("g")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(xAxis);
 
-      // Eje y para la distribución de Gauss (ocultamos los ticks y los números)
-      const yAxisGaussian = d3.axisLeft(yScaleGaussian).tickSize(0).tickPadding(10);
+      // Eje y (sin ticks y números)
+      const yAxisGaussian = d3.axisLeft(yScaleGaussian).tickSize(0).tickFormat("").tickPadding(10);
       svg
         .append("g")
         .attr("transform", `translate(${margin.left},0)`)
