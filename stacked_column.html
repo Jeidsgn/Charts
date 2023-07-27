@@ -1,112 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfica de Barras Apiladas con D3.js</title>
+  <title>Gráfica Apilada Horizontal con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="600" height="400" style="padding: 40px;"></svg>
+  <svg id="chart" width="100%" height="80" style="padding: 10px;"></svg>
 
   <script>
     // Carga el archivo CSV
     d3.csv("data.csv").then((data) => {
-      // Obtener el conteo de usuarios por grupo de edades
-      const ageGroups = [
-        { name: "-17", color: "#FF7EA4", count: 0 },
-        { name: "18-24", color: "#3E73B9", count: 0 },
-        { name: "25-34", color: "#9040c8", count: 0 },
-        { name: "35-44", color: "#4FABB2", count: 0 },
-        { name: "+44", color: "#FF7EA4", count: 0 },
-      ];
+      // Obtener los datos para la gráfica apilada
+      const ageGroups = ["-17", "18-24", "25-34", "35-44", "+44"];
+      const colors = ["#FF7EA4", "#3E73B9", "#9040c8", "#4FABB2", "#FF7EA4"];
+      
+      const ageData = ageGroups.map((ageGroup) => {
+        const filteredData = data.filter((d) => {
+          const birthYear = new Date(d.Nacimiento).getFullYear();
+          return (ageGroup === "-17" && birthYear > new Date().getFullYear() - 17) ||
+            (ageGroup === "+44" && birthYear <= new Date().getFullYear() - 44) ||
+            (ageGroup !== "-17" && ageGroup !== "+44" && 
+            birthYear >= parseInt(ageGroup.split('-')[0]) &&
+            birthYear <= parseInt(ageGroup.split('-')[1]));
+        });
 
-      data.forEach((d) => {
-        const age = getAge(d.Nacimiento);
-        if (age < 18) {
-          ageGroups[0].count++;
-        } else if (age >= 18 && age <= 24) {
-          ageGroups[1].count++;
-        } else if (age >= 25 && age <= 34) {
-          ageGroups[2].count++;
-        } else if (age >= 35 && age <= 44) {
-          ageGroups[3].count++;
-        } else {
-          ageGroups[4].count++;
-        }
+        return {
+          ageGroup,
+          count: filteredData.length
+        };
       });
 
-      // Función para obtener la edad a partir de la fecha de nacimiento
-      function getAge(birthDate) {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const month = today.getMonth() - birth.getMonth();
-        if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
-          age--;
-        }
-        return age;
-      }
+      // Calcular el total de usuarios para calcular el ancho de cada trozo
+      const totalUsers = d3.sum(ageData, (d) => d.count);
 
-      // Calcular el total de usuarios
-      const totalUsers = data.length;
-
-      // Escalas
-      const xScale = d3.scaleLinear().domain([0, totalUsers]).range([0, 400]);
-
-      // Crear la gráfica de barras apiladas
-      const width = 600;
-      const height = 400;
+      // Crear la gráfica apilada
+      const width = "100%";
+      const height = 80;
       const svg = d3.select("#chart");
 
-      svg
-        .selectAll(".bar")
-        .data(ageGroups)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", (d) => 200 - xScale(d.count))
-        .attr("y", (d, i) => i * 50)
-        .attr("width", (d) => xScale(d.count))
-        .attr("height", 40)
-        .attr("fill", (d) => d.color)
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut);
+      const xScale = d3.scaleLinear()
+        .domain([0, totalUsers])
+        .range([0, width]);
 
-      svg
-        .selectAll(".label")
-        .data(ageGroups)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", (d) => 200 - xScale(d.count) + xScale(d.count) / 2)
-        .attr("y", (d, i) => i * 50 + 25)
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "middle")
-        .style("font-family", "Montserrat, sans-serif")
-        .text((d) => `${d.name} (${((d.count / totalUsers) * 100).toFixed(2)}%)`);
+      const g = svg.append("g");
 
-      // Función para mostrar el porcentaje con hover
-      function handleMouseOver(d) {
-        const percentage = ((d.count / totalUsers) * 100).toFixed(2);
-        d3.select(this).attr("fill", "yellow");
-        svg
-          .append("text")
-          .attr("id", "hoverText")
-          .attr("x", 200 - xScale(d.count) + xScale(d.count) / 2)
-          .attr("y", d.name === "+44" ? 200 : d.name === "35-44" ? 135 : d.name === "25-34" ? 85 : d.name === "18-24" ? 35 : 0)
+      let xPosition = 0;
+      ageData.forEach((d, i) => {
+        const percentage = (d.count / totalUsers) * 100;
+        g.append("rect")
+          .attr("x", xPosition)
+          .attr("y", 0)
+          .attr("width", xScale(d.count))
+          .attr("height", height)
+          .attr("fill", colors[i]);
+
+        g.append("text")
+          .attr("x", xPosition + xScale(d.count) / 2)
+          .attr("y", height / 2)
           .attr("text-anchor", "middle")
           .attr("alignment-baseline", "middle")
-          .style("font-family", "Montserrat, sans-serif")
-          .text(`${percentage}%`);
-      }
+          .attr("fill", "white")
+          .style("font-size", "12px")
+          .text(`${d.count} (${percentage.toFixed(2)}%)`);
 
-      function handleMouseOut() {
-        d3.select(this).attr("fill", (d) => d.color);
-        d3.select("#hoverText").remove();
-      }
-    });
+        xPosition += xScale(d.count);
+      });
+
+      // Estilos para el gráfico
+      svg.style("background-color", "#C5C4CD");
+      g.style("font-family", "Montserrat, sans-serif");
+    })
+    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
   </script>
 </body>
 </html>
