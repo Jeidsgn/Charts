@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfica de Curva con D3.js</title>
+  <title>Gráfica de Curva Suavizada con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
@@ -17,7 +17,7 @@
       const dates = data.map((d) => new Date(d.Registro));
       dates.sort((a, b) => a - b);
 
-      // Crear la gráfica de curva
+      // Crear la gráfica de curva suavizada
       const width = 600;
       const height = 300;
       const margin = { top: 30, right: 30, bottom: 0, left: 30 };
@@ -47,18 +47,81 @@
         .attr("offset", "100%")
         .attr("stop-color", "#73D0EE");
 
-      // Crear la curva de usuarios registrados
+      // Crear la curva suavizada de usuarios registrados
       const area = d3
         .area()
         .x((d) => xScale(d))
         .y0(yScale(0))
-        .y1((d, i) => yScale(i));
+        .y1((d, i) => yScale(i))
+        .curve(d3.curveCardinal); // Aplicar la interpolación cardinal cúbica para suavizar la curva
 
       svg
         .append("path")
         .datum(dates)
         .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
         .attr("d", area);
+
+      // Línea vertical para mostrar la información al hacer hover
+      const hoverLine = svg
+        .append("line")
+        .attr("stroke", "#2c2c2c")
+        .attr("stroke-width", "1px")
+        .style("opacity", 0); // Inicialmente la línea estará oculta
+
+      // Grupo para el texto de la fecha y cantidad de usuarios
+      const infoGroup = svg.append("g").style("opacity", 0); // Inicialmente el grupo estará oculto
+
+      // Texto para la fecha
+      infoGroup
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("fill", "#2c2c2c")
+        .attr("font-size", "12px")
+        .attr("y", yScale(data.length) - 10);
+
+      // Texto para la cantidad de usuarios
+      infoGroup
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("fill", "#2c2c2c")
+        .attr("font-size", "12px")
+        .attr("y", yScale(data.length) + 10);
+
+      // Función para mostrar la línea vertical y el texto al hacer hover
+      const handleMousemove = (event) => {
+        const mouseX = event.offsetX;
+        const date = xScale.invert(mouseX);
+
+        // Buscar el índice más cercano en el arreglo de fechas
+        const bisectDate = d3.bisector((d) => d).left;
+        const index = bisectDate(dates, date, 1);
+        const usersCount = index;
+
+        // Mostrar la línea vertical en el punto del hover
+        hoverLine
+          .attr("x1", mouseX)
+          .attr("x2", mouseX)
+          .attr("y1", yScale(0))
+          .attr("y2", yScale(data.length))
+          .style("opacity", 1);
+
+        // Mostrar el texto de la fecha y cantidad de usuarios
+        infoGroup
+          .attr("transform", `translate(${mouseX},${yScale(data.length)})`)
+          .style("opacity", 1);
+
+        infoGroup.select("text:nth-child(1)").text(d3.timeFormat("%Y-%m-%d")(date));
+        infoGroup.select("text:nth-child(2)").text(`Usuarios: ${usersCount}`);
+      };
+
+      // Función para ocultar la línea vertical y el texto al dejar de hacer hover
+      const handleMouseout = () => {
+        hoverLine.style("opacity", 0);
+        infoGroup.style("opacity", 0);
+      };
+
+      // Añadir los eventos de hover a la gráfica
+      svg.on("mousemove", handleMousemove).on("mouseout", handleMouseout);
 
       // Eje x (sin ticks y números)
       const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
