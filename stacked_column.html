@@ -8,70 +8,100 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="100%" height="80" style="padding: 40px;"></svg>
+  <svg id="chart" width="600" height="80" style="padding: 10px;"></svg>
 
   <script>
     // Carga el archivo CSV
     d3.csv("data.csv").then((data) => {
-      // Obtener la cantidad de usuarios en cada grupo de edad
-      const ageGroups = [
-        { group: "-17", color: "#FF7EA4" },
-        { group: "18-24", color: "#3E73B9" },
-        { group: "25-34", color: "#9040c8" },
-        { group: "35-44", color: "#4FABB2" },
-        { group: "+44", color: "#FF7EA4" },
-      ];
+      // Obtener la cantidad de usuarios en cada grupo de edades
+      const ageGroups = {
+        "-17": 0,
+        "18-24": 0,
+        "25-34": 0,
+        "35-44": 0,
+        "+44": 0,
+      };
 
-      const ageData = ageGroups.map((ageGroup) => ({
-        group: ageGroup.group,
-        count: data.filter((d) => getAgeGroup(d.Nacimiento) === ageGroup.group).length,
-        color: ageGroup.color,
+      data.forEach((d) => {
+        const age = calculateAge(d.Nacimiento);
+        if (age < 17) {
+          ageGroups["-17"]++;
+        } else if (age >= 18 && age <= 24) {
+          ageGroups["18-24"]++;
+        } else if (age >= 25 && age <= 34) {
+          ageGroups["25-34"]++;
+        } else if (age >= 35 && age <= 44) {
+          ageGroups["35-44"]++;
+        } else {
+          ageGroups["+44"]++;
+        }
+      });
+
+      // Convertir el objeto de conteo en un arreglo de objetos
+      const ageData = Object.keys(ageGroups).map((group) => ({
+        group,
+        count: ageGroups[group],
       }));
 
-      // Función para obtener el grupo de edad según la fecha de nacimiento
-      function getAgeGroup(dateString) {
-        const birthDate = new Date(dateString);
-        const today = new Date();
-        const age = today.getFullYear() - birthDate.getFullYear();
-        return age <= 17 ? "-17" : age <= 24 ? "18-24" : age <= 34 ? "25-34" : age <= 44 ? "35-44" : "+44";
-      }
-
-      // Crear la gráfica de barras apiladas
-      const width = "100%";
+      // Crear la gráfica de barras apiladas horizontal
+      const width = 600;
       const height = 80;
       const svg = d3.select("#chart");
 
-      const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
+      const xScale = d3.scaleLinear().domain([0, data.length]).range([0, width]);
+      const yScale = d3.scaleLinear().domain([0, 1]).range([0, height]);
 
-      const bars = svg.selectAll(".bar").data(ageData).enter().append("g").attr("class", "bar");
-
-      bars
+      svg
+        .selectAll("rect")
+        .data(ageData)
+        .enter()
         .append("rect")
-        .attr("x", 0)
+        .attr("x", (d) => xScale(d3.sum(ageData.slice(0, ageData.indexOf(d) + 1), (item) => item.count)))
         .attr("y", 0)
         .attr("width", (d) => xScale(d.count))
         .attr("height", height)
-        .attr("fill", (d) => d.color);
+        .attr("fill", (d) => getGroupColor(d.group))
+        .append("title") // Añadir tooltip con el conteo de usuarios en cada grupo
+        .text((d) => `Edad: ${d.group}, Usuarios: ${d.count}`);
 
-      bars
-        .append("text")
-        .attr("x", (d) => (xScale(d.count) > 30 ? 5 : xScale(d.count) + 5)) // Ajustar el espaciado del texto dentro del trozo de barra
-        .attr("y", height / 2)
-        .attr("dy", "0.35em")
-        .style("font-family", "Montserrat, sans-serif")
-        .style("font-size", (d) => (xScale(d.count) > 30 ? "14px" : "12px")) // Ajustar el tamaño de fuente para que quepa en cada trozo
-        .text((d) => `${d.group} (${d.count})`);
-
-      // Etiqueta del eje x
       svg
+        .selectAll("text")
+        .data(ageData)
+        .enter()
         .append("text")
-        .attr("x", width / 2)
-        .attr("y", height + 30) // Ajustar la posición vertical de la etiqueta del eje x
+        .attr("x", (d) => xScale(d3.sum(ageData.slice(0, ageData.indexOf(d) + 1), (item) => item.count)) + xScale(d.count) / 2)
+        .attr("y", height / 2)
+        .attr("fill", "white")
         .attr("text-anchor", "middle")
-        .style("font-family", "Montserrat, sans-serif")
-        .style("font-size", "14px")
-        .text("Porcentaje de usuarios por grupo de edad");
-    });
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "16px")
+        .text((d) => d.count);
+
+      // Función para calcular la edad a partir de la fecha de nacimiento
+      function calculateAge(birthDate) {
+        const today = new Date();
+        const birthDateObj = new Date(birthDate);
+        let age = today.getFullYear() - birthDateObj.getFullYear();
+        const monthDiff = today.getMonth() - birthDateObj.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+          age--;
+        }
+        return age;
+      }
+
+      // Función para obtener el color correspondiente a cada grupo de edades
+      function getGroupColor(group) {
+        const colors = {
+          "-17": "#FF7EA4",
+          "18-24": "#3E73B9",
+          "25-34": "#9040c8",
+          "35-44": "#4FABB2",
+          "+44": "#FF7EA4",
+        };
+        return colors[group];
+      }
+    })
+    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
   </script>
 </body>
 </html>
