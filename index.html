@@ -15,8 +15,10 @@
       margin: 20px auto;
       padding: 20px;
       max-width: 700px; /* Limitar el ancho máximo de la tarjeta */
-      max-height:  600px; /* Limitar el alto máximo de la tarjeta */
       border-radius: 8px; /* Bordes redondeados para efecto de tarjeta */
+      display: inline-block; /* Mostrar las secciones una al lado de la otra */
+      vertical-align: top; /* Alinear las secciones en la parte superior */
+      box-sizing: border-box; /* Incluir el padding y el borde en el tamaño total */
     }
 
     /* Estilos para cada gráfica centrada horizontalmente */
@@ -30,23 +32,23 @@
   <h1>Índice de Gráficas</h1>
   <section>
     <h2>Spider</h2>
-    <iframe src="spider_chart.html" width="700" height="700" frameborder="0"></iframe>
+    <iframe src="spider_chart.html" frameborder="0"></iframe>
   </section>
   <section>
     <h2>Cake</h2>
-    <iframe src="cake.html" width="700" height="700" frameborder="0"></iframe>
+    <iframe src="cake.html" frameborder="0"></iframe>
   </section>
   <section>
     <h2>Gauss</h2>
-    <iframe src="gauss.html" width="700" height="700" frameborder="0"></iframe>
+    <iframe src="gauss.html" frameborder="0"></iframe>
   </section>
   <section>
     <h2>Stacked Column</h2>
-    <iframe src="stacked_column.html" width="700" height="700" frameborder="0"></iframe>
+    <iframe src="stacked_column.html" frameborder="0"></iframe>
   </section>
   <section>
     <h2>Curve</h2>
-    <iframe src="curve.html" width="700" height="700" frameborder="0"></iframe>
+    <iframe src="curve.html" frameborder="0"></iframe>
   </section>
   <!-- Agrega más secciones para otras gráficas si es necesario -->
 </body>
