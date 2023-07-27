@@ -43,7 +43,7 @@
       // Configurar una escala de colores para asignar colores a cada arco
       const color = d3.scaleOrdinal()
         .domain(languageData.map(d => d.language)) // Asignar un color a cada idioma único
-        .range(["#FF7EA4", "#3E73B9", "#231f20", "#e2a500", "#a7e600", "#e63900", "#1d3ee3"]); // Colores personalizados para cada idioma (puedes agregar más colores si es necesario)
+        .range(["#FF7EA4", "#3E73B9", "#4FABB2", "#9040c8"]); // Colores personalizados para cada idioma (puedes agregar más colores si es necesario)
 
       // Crear un grupo (g) en el centro del SVG
       const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
@@ -66,6 +66,10 @@
         .attr("dy", "0.35em")
         .style("text-anchor", "middle")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(2)}%)`);
+        
+      // Tipografía 
+      svg
+        .selectAll("text").style("font-family", "Montserrat, sans-serif");
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
   </script>

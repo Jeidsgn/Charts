@@ -53,8 +53,8 @@
         .attr("x2", 0).attr("y2", yScaleGaussian(maxGaussianValue)); // Punto final del gradiente (parte superior)
 
       // Añadir los colores al gradiente
-      gradient.append("stop").attr("offset", "0%").attr("stop-color", "#8B97B3"); // Color en la parte inferior
-      gradient.append("stop").attr("offset", "100%").attr("stop-color", "#86D1D6"); // Color en la parte superior
+      gradient.append("stop").attr("offset", "0%").attr("stop-color", "#86D1D6"); // Color en la parte inferior
+      gradient.append("stop").attr("offset", "100%").attr("stop-color", "#8B97B3"); // Color en la parte superior
 
       // Crear el área rellena de la curva de Gauss usando el gradiente
       const area = d3.area()
@@ -145,6 +145,9 @@
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Cantidad de usuarios aprox.");
+      // Tipografía 
+      svg
+        .selectAll("text").style("font-family", "Montserrat, sans-serif");
 
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
