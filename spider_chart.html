@@ -4,6 +4,7 @@
   <title>Gráfica de Telaraña con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -80,7 +81,7 @@
 
       const path = svg.append("path")
         .datum(topCountries)
-        .attr("fill", "#4B92E5")
+        .attr("fill", "#3E73B9")
         .attr("fill-opacity", "0.5")
         .attr("transform", `translate(${width / 2},${height / 2})`)
         .attr("d", area);

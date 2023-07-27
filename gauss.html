@@ -4,6 +4,7 @@
   <title>Gráfica de Gauss con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -44,16 +45,27 @@
       // Generar los puntos para la curva de Gauss
       const curveData = d3.range(0, maxScore, 1).map((x) => ({ x, y: gaussian(x, averageScore, d3.deviation(scores)) }));
 
-      // Crear el área rellena de la curva de Gauss
+      // Crear un gradiente lineal para el relleno de la curva de Gauss
+      const gradient = svg.append("defs").append("linearGradient")
+        .attr("id", "gaussGradient")
+        .attr("gradientUnits", "userSpaceOnUse") // Espacio de usuario para que el gradiente se aplique desde coordenadas del SVG
+        .attr("x1", 0).attr("y1", yScaleGaussian(0)) // Punto de inicio del gradiente (parte inferior)
+        .attr("x2", 0).attr("y2", yScaleGaussian(maxGaussianValue)); // Punto final del gradiente (parte superior)
+
+      // Añadir los colores al gradiente
+      gradient.append("stop").attr("offset", "0%").attr("stop-color", "#8B97B3"); // Color en la parte inferior
+      gradient.append("stop").attr("offset", "100%").attr("stop-color", "#86D1D6"); // Color en la parte superior
+
+      // Crear el área rellena de la curva de Gauss usando el gradiente
       const area = d3.area()
         .x((d) => xScale(d.x))
         .y0(height - margin.bottom)
         .y1((d) => yScaleGaussian(d.y));
 
-      svg
+        svg
         .append("path")
         .datum(curveData)
-        .attr("fill", "#4B92E5")
+        .attr("fill", "url(#gaussGradient)") // Usar el gradiente para el relleno
         .attr("d", area);
 
       // Crear la línea vertical para el promedio
@@ -90,6 +102,15 @@
         .attr("fill", "black")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
+        // Etiqueta para el puntaje máximo
+      svg
+        .append("text")
+        .attr("x", xScale(maxScore))
+        .attr("y", height - margin.bottom + 40)
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .text(`Score Máximo: ${maxScore}`);
+
       // Línea vertical para el puntaje máximo
       const maxLine = svg
         .append("line")
@@ -100,15 +121,6 @@
         .attr("stroke", "black")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#arrow)");
-
-      // Etiqueta para el puntaje máximo
-      svg
-        .append("text")
-        .attr("x", xScale(maxScore))
-        .attr("y", height - margin.bottom + 40)
-        .attr("text-anchor", "middle")
-        .attr("fill", "black")
-        .text(`Score Máximo: ${maxScore}`);
 
       // Eje x (sin ticks y números)
       const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
@@ -132,7 +144,7 @@
         .attr("x", 0 - height / 2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Densidad de Probabilidad");
+        .text("Cantidad de usuarios aprox.");
 
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));

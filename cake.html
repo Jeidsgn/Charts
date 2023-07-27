@@ -4,6 +4,7 @@
   <title>Gráfica de Torta con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -29,29 +30,36 @@
         percentage: (languageCounts[language] / totalRecords) * 100,
       }));
 
-      // Crear la gráfica de torta
+      // Crear la gráfica
       const width = 500;
       const height = 500;
       const radius = Math.min(width, height) / 2;
       const svg = d3.select("#chart");
 
+      // Configurar el generador de la gráfica (pie) y el generador de arcos (arc)
       const pie = d3.pie().value((d) => d.count);
-
       const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
-      const color = d3.scaleOrdinal(d3.schemeCategory10);
+      // Configurar una escala de colores para asignar colores a cada arco
+      const color = d3.scaleOrdinal()
+        .domain(languageData.map(d => d.language)) // Asignar un color a cada idioma único
+        .range(["#FF7EA4", "#3E73B9", "#231f20", "#e2a500", "#a7e600", "#e63900", "#1d3ee3"]); // Colores personalizados para cada idioma (puedes agregar más colores si es necesario)
 
+      // Crear un grupo (g) en el centro del SVG
       const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
 
+      // Crear los arcos para cada idioma
       const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
 
+      // Añadir los arcos (arc) al grupo (g)
       arcs
         .append("path")
         .attr("d", arc)
-        .attr("fill", (d) => color(d.data.language))
+        .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
         .attr("stroke", "white")
         .style("stroke-width", "2px");
 
+      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
       arcs
         .append("text")
         .attr("transform", (d) => `translate(${arc.centroid(d)})`)
