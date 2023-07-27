@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfica de Edades con D3.js</title>
+  <title>Gráfica de Barras Apiladas con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
@@ -13,106 +13,100 @@
   <script>
     // Carga el archivo CSV
     d3.csv("data.csv").then((data) => {
-      // Obtener los grupos de edad y sus colores
+      // Obtener el conteo de usuarios por grupo de edades
       const ageGroups = [
-        { group: "-17", color: "#FF7EA4" },
-        { group: "18-24", color: "#3E73B9" },
-        { group: "25-34", color: "#9040c8" },
-        { group: "35-44", color: "#4FABB2" },
-        { group: "+44", color: "#FF7EA4" },
+        { name: "-17", color: "#FF7EA4", count: 0 },
+        { name: "18-24", color: "#3E73B9", count: 0 },
+        { name: "25-34", color: "#9040c8", count: 0 },
+        { name: "35-44", color: "#4FABB2", count: 0 },
+        { name: "+44", color: "#FF7EA4", count: 0 },
       ];
 
-      // Calcular el conteo de usuarios para cada grupo de edad
-      const ageCounts = {};
       data.forEach((d) => {
-        const birthYear = new Date(d.Nacimiento).getFullYear();
-        const age = new Date().getFullYear() - birthYear;
-        const group = ageGroups.find((g) => g.group === getAgeGroup(age));
-        ageCounts[group.group] = (ageCounts[group.group] || 0) + 1;
+        const age = getAge(d.Nacimiento);
+        if (age < 18) {
+          ageGroups[0].count++;
+        } else if (age >= 18 && age <= 24) {
+          ageGroups[1].count++;
+        } else if (age >= 25 && age <= 34) {
+          ageGroups[2].count++;
+        } else if (age >= 35 && age <= 44) {
+          ageGroups[3].count++;
+        } else {
+          ageGroups[4].count++;
+        }
       });
 
-      // Función para obtener el grupo de edad según la edad
-      function getAgeGroup(age) {
-        if (age <= 17) return "-17";
-        if (age >= 18 && age <= 24) return "18-24";
-        if (age >= 25 && age <= 34) return "25-34";
-        if (age >= 35 && age <= 44) return "35-44";
-        return "+44";
+      // Función para obtener la edad a partir de la fecha de nacimiento
+      function getAge(birthDate) {
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const month = today.getMonth() - birth.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
+          age--;
+        }
+        return age;
       }
 
-      // Convertir el objeto de conteo en un arreglo de objetos
-      const ageData = ageGroups.map((group) => ({
-        group: group.group,
-        count: ageCounts[group.group] || 0,
-        percentage: ((ageCounts[group.group] || 0) / data.length) * 100,
-      }));
+      // Calcular el total de usuarios
+      const totalUsers = data.length;
+
+      // Escalas
+      const xScale = d3.scaleLinear().domain([0, totalUsers]).range([0, 400]);
 
       // Crear la gráfica de barras apiladas
       const width = 600;
       const height = 400;
-      const margin = { top: 30, right: 30, bottom: 70, left: 100 };
       const svg = d3.select("#chart");
 
-      // Escalas
-      const xScale = d3.scaleLinear().domain([0, d3.max(ageData, (d) => d.count)]).range([margin.left, width - margin.right]);
-      const yScale = d3.scaleBand().domain(ageGroups.map((group) => group.group)).range([height - margin.bottom, margin.top]).padding(0.2);
-
-      // Crear las barras apiladas
-      const bars = svg
+      svg
         .selectAll(".bar")
-        .data(ageData)
+        .data(ageGroups)
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", margin.left)
-        .attr("y", (d) => yScale(d.group))
-        .attr("width", (d) => xScale(d.count) - margin.left)
-        .attr("height", yScale.bandwidth())
+        .attr("x", (d) => 200 - xScale(d.count))
+        .attr("y", (d, i) => i * 50)
+        .attr("width", (d) => xScale(d.count))
+        .attr("height", 40)
         .attr("fill", (d) => d.color)
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut);
 
-      // Agregar etiquetas de edad dentro de cada trozo
       svg
         .selectAll(".label")
-        .data(ageData)
+        .data(ageGroups)
         .enter()
         .append("text")
         .attr("class", "label")
-        .attr("x", (d) => xScale(d.count) + 10)
-        .attr("y", (d) => yScale(d.group) + yScale.bandwidth() / 2)
-        .attr("dy", "0.35em")
-        .style("font-size", "12px")
-        .text((d) => d.group);
+        .attr("x", (d) => 200 - xScale(d.count) + xScale(d.count) / 2)
+        .attr("y", (d, i) => i * 50 + 25)
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .style("font-family", "Montserrat, sans-serif")
+        .text((d) => `${d.name} (${((d.count / totalUsers) * 100).toFixed(2)}%)`);
 
-      // Función para manejar el evento mouseover
+      // Función para mostrar el porcentaje con hover
       function handleMouseOver(d) {
-        const tooltip = svg.append("g").attr("id", "tooltip");
-
-        tooltip
-          .append("rect")
-          .attr("x", xScale(d.count) + 10)
-          .attr("y", yScale(d.group) - 18)
-          .attr("width", 60)
-          .attr("height", 18)
-          .attr("fill", "#f0f0f0")
-          .attr("stroke", "black");
-
-        tooltip
+        const percentage = ((d.count / totalUsers) * 100).toFixed(2);
+        d3.select(this).attr("fill", "yellow");
+        svg
           .append("text")
-          .attr("x", xScale(d.count) + 40)
-          .attr("y", yScale(d.group) - 6)
+          .attr("id", "hoverText")
+          .attr("x", 200 - xScale(d.count) + xScale(d.count) / 2)
+          .attr("y", d.name === "+44" ? 200 : d.name === "35-44" ? 135 : d.name === "25-34" ? 85 : d.name === "18-24" ? 35 : 0)
           .attr("text-anchor", "middle")
-          .style("font-size", "12px")
-          .text(`${d.percentage.toFixed(2)}%`);
+          .attr("alignment-baseline", "middle")
+          .style("font-family", "Montserrat, sans-serif")
+          .text(`${percentage}%`);
       }
 
-      // Función para manejar el evento mouseout
-      function handleMouseOut(d) {
-        svg.select("#tooltip").remove();
+      function handleMouseOut() {
+        d3.select(this).attr("fill", (d) => d.color);
+        d3.select("#hoverText").remove();
       }
-    })
-    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
+    });
   </script>
 </body>
 </html>
