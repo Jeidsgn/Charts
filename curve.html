@@ -53,7 +53,7 @@
         .x((d) => xScale(d))
         .y0(yScale(0))
         .y1((d, i) => yScale(i))
-        .curve(d3.curveCardinal); // Aplicar la interpolación cardinal cúbica para suavizar la curva
+        .curve(d3.curveCatmullRom.alpha(0.5)); // Aumentar el factor de suavizado
 
       svg
         .append("path")
@@ -89,7 +89,7 @@
 
       // Función para mostrar la línea vertical y el texto al hacer hover
       const handleMousemove = (event) => {
-        const mouseX = event.offsetX;
+        const mouseX = d3.pointer(event)[0]; // Obtener la posición X del mouse en relación con el documento
         const date = xScale.invert(mouseX);
 
         // Buscar el índice más cercano en el arreglo de fechas
