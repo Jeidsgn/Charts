@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gráfica de Curva con D3.js</title>
+  <meta charset="utf-8">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <svg id="chart" width="600" height="300" style="padding: 40px;"></svg>
+
+  <script>
+    // Carga el archivo CSV
+    d3.csv("data.csv").then((data) => {
+      // Obtener las fechas de registro y ordenarlas
+      const dates = data.map((d) => new Date(d.Registro));
+      dates.sort((a, b) => a - b);
+
+      // Crear la gráfica de curva
+      const width = 600;
+      const height = 300;
+      const margin = { top: 30, right: 30, bottom: 0, left: 30 };
+      const svg = d3.select("#chart");
+
+      // Escalas
+      const xScale = d3.scaleTime().domain(d3.extent(dates)).range([margin.left, width - margin.right]);
+      const yScale = d3.scaleLinear().domain([0, data.length]).range([height - margin.bottom, margin.top]);
+
+      // Función para crear el degradado lineal
+      const defs = svg.append("defs");
+      const linearGradient = defs
+        .append("linearGradient")
+        .attr("id", "linear-gradient")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", 0)
+        .attr("y1", yScale(0))
+        .attr("x2", 0)
+        .attr("y2", yScale(data.length));
+
+      linearGradient
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#EF94AC");
+      linearGradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#73D0EE");
+
+      // Crear la curva de usuarios registrados
+      const area = d3
+        .area()
+        .x((d) => xScale(d))
+        .y0(yScale(0))
+        .y1((d, i) => yScale(i));
+
+      svg
+        .append("path")
+        .datum(dates)
+        .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
+        .attr("d", area);
+
+      // Eje x (sin ticks y números)
+      const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(xAxis);
+
+      // Etiqueta para el eje y de la cantidad de usuarios registrados
+      svg
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", margin.left - 10)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style("font-family", "Montserrat, sans-serif") // Agregar la tipografía Montserrat
+        .text("Cantidad de usuarios registrados");
+
+    })
+    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
+  </script>
+</body>
+</html>
