@@ -58,7 +58,7 @@
         .data(ageData)
         .enter()
         .append("rect")
-        .attr("x", (d) => xScale(d3.sum(ageData.slice(0, ageData.indexOf(d) + 1), (item) => item.count)))
+        .attr("x", (d, i) => (i === 0 ? 0 : xScale(d3.sum(ageData.slice(0, i), (item) => item.count))))
         .attr("y", 0)
         .attr("width", (d) => xScale(d.count))
         .attr("height", height)
@@ -71,12 +71,13 @@
         .data(ageData)
         .enter()
         .append("text")
-        .attr("x", (d) => xScale(d3.sum(ageData.slice(0, ageData.indexOf(d) + 1), (item) => item.count)) + xScale(d.count) / 2)
+        .attr("x", (d, i) => (i === 0 ? xScale(d.count) / 2 : xScale(d3.sum(ageData.slice(0, i), (item) => item.count)) + xScale(d.count) / 2))
         .attr("y", height / 2)
         .attr("fill", "white")
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
         .style("font-size", "16px")
+        .style("font-family", "Montserrat, sans-serif") // Agregar la tipografía Montserrat
         .text((d) => d.group);
 
       // Función para calcular la edad a partir de la fecha de nacimiento
