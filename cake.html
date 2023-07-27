@@ -56,8 +56,8 @@
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
-        .attr("stroke", "white")
-        .style("stroke-width", "0px");
+        .attr("stroke", "#2c2c2c")
+        .style("stroke-width", "2px");
 
       // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
       arcs

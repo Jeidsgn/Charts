@@ -50,7 +50,7 @@
         .attr("y1", 0)
         .attr("x2", (d) => radiusScale(maxCount) * Math.cos(angleScale(d) - Math.PI / 2))
         .attr("y2", (d) => radiusScale(maxCount) * Math.sin(angleScale(d) - Math.PI / 2))
-        .style("stroke", "black")
+        .style("stroke", "#2c2c2c")
         .style("stroke-width", "3px")
         .style("opacity", "0.4");
 
@@ -69,7 +69,7 @@
           const circleRadius = radiusScale(totalCount) * 0.1 * d;
           return circleRadius <= radiusScale(maxCount) ? circleRadius : 0; // Establecer el radio a 0 si es mayor al radio máximo
         })
-        .style("stroke", "black")
+        .style("stroke", "#2c2c2c")
         .style("stroke-width", "3px")
         .style("fill", "none")
         .style("opacity", "0.4");

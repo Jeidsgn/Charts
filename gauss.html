@@ -75,7 +75,7 @@
         .attr("y1", margin.top)
         .attr("x2", xScale(averageScore))
         .attr("y2", height - margin.bottom)
-        .attr("stroke", "black")
+        .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#arrow)");
 
@@ -99,7 +99,7 @@
         .attr("x", xScale(averageScore))
         .attr("y", height - margin.bottom + 40)
         .attr("text-anchor", "middle")
-        .attr("fill", "black")
+        .attr("fill", "#2c2c2c")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
         // Etiqueta para el puntaje máximo
@@ -108,7 +108,7 @@
         .attr("x", xScale(maxScore))
         .attr("y", height - margin.bottom + 40)
         .attr("text-anchor", "middle")
-        .attr("fill", "black")
+        .attr("fill", "#2c2c2c")
         .text(`Score Máximo: ${maxScore}`);
 
       // Línea vertical para el puntaje máximo
@@ -118,7 +118,7 @@
         .attr("y1", margin.top)
         .attr("x2", xScale(maxScore))
         .attr("y2", height - margin.bottom)
-        .attr("stroke", "black")
+        .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#arrow)");
 
