@@ -55,11 +55,11 @@
 
       bars
         .append("text")
-        .attr("x", 5) // Ajustar el espaciado del texto dentro del trozo de barra
+        .attr("x", (d) => (xScale(d.count) > 30 ? 5 : xScale(d.count) + 5)) // Ajustar el espaciado del texto dentro del trozo de barra
         .attr("y", height / 2)
         .attr("dy", "0.35em")
         .style("font-family", "Montserrat, sans-serif")
-        .style("font-size", "14px")
+        .style("font-size", (d) => (xScale(d.count) > 30 ? "14px" : "12px")) // Ajustar el tamaño de fuente para que quepa en cada trozo
         .text((d) => `${d.group} (${d.count})`);
 
       // Etiqueta del eje x
