@@ -8,38 +8,37 @@
     body {
       font-family: "Montserrat", sans-serif;
     }
-    .chart-card {
+
+    /* Estilos para cada sección que contiene una gráfica */
+    section {
       background-color: #C5C4CD;
+      margin: 20px auto;
       padding: 20px;
-      margin-bottom: 20px;
+      max-width: 800px; /* Limitar el ancho máximo de la tarjeta */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto de tarjeta */
+      border-radius: 8px; /* Bordes redondeados para efecto de tarjeta */
     }
-    .chart-card h2 {
-      margin-top: 0;
-    }
-    .chart-card iframe {
-      border: none;
+
+    /* Estilos para cada gráfica centrada horizontalmente */
+    iframe {
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
   <h1>Índice de Gráficas</h1>
   <section>
-    <div class="chart-card">
-      <h2>Telaraña</h2>
-      <iframe src="spider_chart.html" width="700" height="700"></iframe>
-    </div>
+    <h2>Telaraña</h2>
+    <iframe src="spider_chart.html" width="700" height="700" frameborder="0"></iframe>
   </section>
   <section>
-    <div class="chart-card">
-      <h2>Torta</h2>
-      <iframe src="cake.html" width="700" height="700"></iframe>
-    </div>
+    <h2>Torta</h2>
+    <iframe src="cake.html" width="700" height="700" frameborder="0"></iframe>
   </section>
   <section>
-    <div class="chart-card">
-      <h2>Gauss</h2>
-      <iframe src="gauss.html" width="700" height="700"></iframe>
-    </div>
+    <h2>Gauss</h2>
+    <iframe src="gauss.html" width="700" height="700" frameborder="0"></iframe>
   </section>
   <!-- Agrega más secciones para otras gráficas si es necesario -->
 </body>
