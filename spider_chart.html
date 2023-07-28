@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="500" height="500" style="padding: 0px;"></svg>
+  <svg id="chart" width="250" height="250" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -27,8 +27,8 @@
       const maxCount = d3.max(topCountries.map(d => countryCounts[d]));
 
       // Representar la gráfica de telaraña
-      const width = 500;
-      const height = 500;
+      const width = 250;
+      const height = 250;
       const svg = d3.select("#chart");
 
       // Escalas

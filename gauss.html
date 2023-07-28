@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="580" height="400" style="padding: 0px;"></svg>
+  <svg id="chart" width="220" height="250" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -19,9 +19,9 @@
       const maxScore = d3.max(scores);
 
       // Crear la gráfica de Gauss
-      const width = 500;
-      const height = 350;
-      const margin = { top: 30, right: 30, bottom: 30, left: 50 };
+      const width = 220;
+      const height = 60;
+      const margin = { top: 30, right: 30, bottom: 130, left: 30 };
       const svg = d3.select("#chart");
 
       // Escalas
