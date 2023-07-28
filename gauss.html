@@ -21,11 +21,11 @@
       // Crear la gráfica de Gauss
       const width = 200;
       const height = 120;
-      const margin = { top: 30, right: 30, bottom: 30, left: 50 };
+      const margin = { top: 10, right: 5, bottom: 10, left: 5 };
       const svg = d3.select("#chart");
 
       // Escalas
-      const xScale = d3.scaleLinear().domain([0, maxScore]).range([margin.left, width - margin.right]);
+      const xScale = d3.scaleLinear().domain([0, maxScore+10]).range([margin.left, width - margin.right]);
       const yScale = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.length)]).range([height - margin.bottom, margin.top]);
 
       // Generar una aproximación de la distribución de Gauss
@@ -98,7 +98,7 @@
         .append("text")
         .attr("x", xScale(averageScore))
         .attr("y", height - margin.bottom + 40)
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", "semibold")
         .attr("fill", "#2c2c2c")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
@@ -107,9 +107,9 @@
         .append("text")
         .attr("x", xScale(maxScore))
         .attr("y", height - margin.bottom + 40)
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", "semibold")
         .attr("fill", "#2c2c2c")
-        .text(`Score Máximo: ${maxScore}`);
+        .text(`Máximo: ${maxScore}`);
 
       // Línea vertical para el puntaje máximo
       const maxLine = svg
@@ -140,7 +140,7 @@
       svg
         .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", margin.left - 40)
+        .attr("y", margin.left - 5)
         .attr("x", 0 - height / 2)
         .attr("dy", "0.3em")
         .style("text-anchor", "middle")

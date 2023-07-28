@@ -74,8 +74,8 @@
         .attr("x", (d, i) => (i === 0 ? xScale(d.count) / 2 : xScale(d3.sum(ageData.slice(0, i), (item) => item.count)) + xScale(d.count) / 2))
         .attr("y", height / 2)
         .attr("fill", "white")
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "bold")
+        .attr("dominant-baseline", "bold")
         .style("font-size", "16px")
         .style("font-family", "Montserrat, sans-serif") // Agregar la tipografía Montserrat
         .text((d) => d.group);
