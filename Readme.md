@@ -34,6 +34,8 @@ Se pueden ver aquí: https://jeidsgn.github.io/Charts/
 
 El objetivo de este proyecto es proporcionar una colección de plantillas de gráficas que pueden utilizar para mostrar datos de manera efectiva y atractiva utilizando javascript.
 
+![Alt text](image.png)
+
 ## Configuración del SVG
 
 SVG es una forma de renderizar imágenes en la página web. SVG no es una imagen directa, sino solo una forma de crear imágenes usando texto. Las visualizaciones de datos son representaciones visuales y es conveniente usar SVG para representar visualizaciones usando D3.js. SVG es como el lienzo en el que podemos pintar diferentes formas.
@@ -55,6 +57,8 @@ SVG es una forma de renderizar imágenes en la página web. SVG no es una imagen
 
 curve.html: Una gráfica de línea suavizada. Ideal para representar tendencias o patrones en los datos a lo largo del tiempo u otro tipo de variable continua.
 
+![Alt text](image-1.png)
+
 #### Creación de la Gráfica
 
 - **d3.line()** La curva suave que conecta los puntos de datos en la gráfica. Los puntos de la curva se colocan en función de sus fechas (eje x) y el índice correspondiente en el conjunto de datos (eje y).
@@ -71,6 +75,8 @@ _Nota: Si utilizas tus propios datos, asegúrate de que el formato de fecha en e
 ---
 
 ### Cake
+
+![Alt text](image-2.png)
 
 cake.html: Un gráfico de pastel que muestra la proporción de diferentes categorías en un conjunto de datos. Útil para resaltar la composición relativa de elementos.
 
@@ -94,6 +100,8 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 ---
 
 ### Spider
+
+![Alt text](image-3.png)
 
 spider.html: Una gráfica de radar o araña que permite comparar múltiples variables en diferentes categorías. Es ideal para mostrar perfiles multivariables. Muestra la distribución de países más repetidos en un conjunto de datos y representa la cantidad de repeticiones de cada país en forma de "telaraña" con ejes radiales y círculos tangenciales.
 
@@ -119,6 +127,8 @@ _Nota: Puedes modificar los emojis proporcionados en el objeto `emojis` para rep
 
 ### Stacked column
 
+![Alt text](image-4.png)
+
 stacked_column.html: Contiene una visualización de una gráfica de barras apiladas horizontal. La gráfica muestra la distribución de usuarios en diferentes grupos de edades.
 
 #### Procesamiento de Datos
@@ -138,6 +148,8 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 ---
 
 ### Gauss
+
+![Alt text](image-5.png)
 
 gauss.html: Una visualización que representa una distribución de datos utilizando una gráfica de campana (distribución gaussiana). Perfecta para mostrar la distribución de valores en un conjunto de datos.
 
