@@ -102,22 +102,31 @@
         .attr("fill", "#2c2c2c")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
-        // Etiqueta para el puntaje máximo
+      // Etiqueta del promedio
+      svg
+        .append("text")
+        .attr("x", xScale(averageScore))
+        .attr("y", height - margin.bottom + 40)
+        .attr("text-anchor", "middle") // Alinear el texto en el centro horizontal
+        .attr("fill", "#2c2c2c")
+        .text(`Promedio: ${averageScore.toFixed(2)}`);
+
+      // Etiqueta para el puntaje máximo
       svg
         .append("text")
         .attr("x", xScale(maxScore))
-        .attr("y", height - margin.bottom + 40)
-        .attr("text-anchor", "semibold")
+        .attr("y", height - margin.bottom + 60) // Alinear debajo de la etiqueta del promedio
+        .attr("text-anchor", "end") // Alinear el texto a la derecha
         .attr("fill", "#2c2c2c")
         .text(`Máximo: ${maxScore}`);
 
-      // Línea vertical para el puntaje máximo
-      const maxLine = svg
+        // Línea vertical para el puntaje máximo
+        const maxLine = svg
         .append("line")
         .attr("x1", xScale(maxScore))
-        .attr("y1", margin.top)
+        .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
         .attr("x2", xScale(maxScore))
-        .attr("y2", height - margin.bottom)
+        .attr("y2", yScaleGaussian(maxGaussianValue)) // Terminar en la parte superior del área rellena
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#arrow)");
