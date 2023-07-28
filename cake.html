@@ -63,7 +63,7 @@
       arcs
         .append("text")
         .attr("transform", (d) => `translate(${arc.centroid(d)})`)
-        .attr("dy", "0.35em")
+        .attr("dy", "0.25em")
         .style("text-anchor", "middle")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(2)}%)`);
 
