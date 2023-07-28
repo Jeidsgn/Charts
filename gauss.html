@@ -68,69 +68,91 @@
         .attr("fill", "url(#gaussGradient)") // Usar el gradiente para el relleno
         .attr("d", area);
 
-      // Ajustar posición de la etiqueta del promedio
-      svg
-        .append("circle")
-        .attr("cx", xScale(averageScore))
-        .attr("cy", yScaleGaussian(0))
-        .attr("r", 5)
-        .attr("fill", "#2c2c2c");
-
-      svg
+      // Crear la línea vertical para el promedio
+      const averageLine = svg 
         .append("line")
         .attr("x1", xScale(averageScore))
-        .attr("y1", yScaleGaussian(0))
+        .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
         .attr("x2", xScale(averageScore))
-        .attr("y2", yScaleGaussian(0)-20)
+        .attr("y2", yScaleGaussian(0)+20) // Terminar en la parte inferior del área rellena
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
-        .attr("marker-end", "url(#arrow)");
+        .attr("marker-end", "url(#circle)")
+        .attr("marker-start", "url(#arrow)");
 
-      // Ajustar posición de la etiqueta para el puntaje máximo
+      // Agregar el marcador de flecha
       svg
-        .append("circle")
-        .attr("cx", xScale(maxScore))
-        .attr("cy", yScaleGaussian(0))
-        .attr("r", 5)
-        .attr("fill", "#2c2c2c");
-
-      svg
-        .append("line")
-        .attr("x1", xScale(maxScore))
-        .attr("y1", yScaleGaussian(0))
-        .attr("x2", xScale(maxScore))
-        .attr("y2", yScaleGaussian(0)-40)
-        .attr("stroke", "#2c2c2c")
-        .attr("stroke-width", "2px")
-        .attr("marker-end", "url(#arrow)");
+        .append("defs")
+        .append("marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 5)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5");
 
       // Etiqueta del promedio
       svg
         .append("text")
         .attr("x", xScale(averageScore))
-        .attr("y", yScaleGaussian(0)-10)
+        .attr("y", height - margin.bottom + 40)
         .attr("text-anchor", "middle") // Alinear el texto en el centro horizontal
         .attr("fill", "#2c2c2c")
-        .style("font-family", "Montserrat, sans-serif")
-        .style("font-weight", "bold")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
       // Etiqueta para el puntaje máximo
       svg
         .append("text")
         .attr("x", xScale(maxScore))
-        .attr("y", yScaleGaussian(0)-30) // Alinear debajo de la etiqueta del promedio
+        .attr("y", height - margin.bottom + 60) // Alinear debajo de la etiqueta del promedio
         .attr("text-anchor", "end") // Alinear el texto a la derecha
         .attr("fill", "#2c2c2c")
-        .style("font-family", "Montserrat, sans-serif")
-        .style("font-weight", "bold")
         .text(`Máximo: ${maxScore}`);
 
+      // Línea vertical para el puntaje máximo
+        const maxLine = svg
+        .append("line")
+        .attr("x1", xScale(maxScore))
+        .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
+        .attr("x2", xScale(maxScore))
+        .attr("y2", yScaleGaussian(0)+50) // Terminar en la parte inferior del área rellena
+        .attr("stroke", "#2c2c2c")
+        .attr("stroke-width", "2px")
+        .attr("marker-end", "url(#circle)")
+        .attr("marker-start", "url(#arrow)");
+
+      // Eje x (sin ticks y números)
+      const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(xAxis);
+
+      // Eje y (sin ticks y números)
+      const yAxisGaussian = d3.axisLeft(yScaleGaussian).tickSize(0).tickFormat("").tickPadding(10);
+      svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .attr("stroke", "none")
+        .call(yAxisGaussian);
+      // Ocultar línea de los ejes
+      svg.selectAll(".domain").remove();
+      // Etiqueta para el eje y de la distribución de Gauss
+      svg
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", margin.left - 5)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "0.3em")
+        .style("text-anchor", "middle")
+        .text("Usuarios");
       // Tipografía 
       svg
-        .selectAll("text")
-        .style("font-family", "Montserrat, sans-serif")
-        .style("font-weight", "bold");
+        .selectAll("text").style("font-family", "Montserrat, sans-serif");
+
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
   </script>
