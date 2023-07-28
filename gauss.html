@@ -13,8 +13,8 @@
   <script>
     // Carga el archivo CSV
     d3.csv("data.csv").then((data) => {
-      // Obtener el promedio y puntaje máximo de los datos
-      const scores = data.map((d) => +d.Score); // Convertir los puntajes a números
+      // Obtener el promedio y máximo de los datos
+      const scores = data.map((d) => +d.Score); // Convertir a números
       const averageScore = d3.mean(scores);
       const maxScore = d3.max(scores);
 
@@ -39,13 +39,13 @@
       // Calcular el valor máximo de la curva de Gauss para ajustar la escala del eje y
       const maxGaussianValue = d3.max(bins, (bin) => gaussian(bin.x0, averageScore, d3.deviation(scores)));
 
-      // Escala para el eje y de la curva de Gauss
+      // Escala para el eje y de la curva
       const yScaleGaussian = d3.scaleLinear().domain([0, maxGaussianValue]).range([height - margin.bottom, margin.top]);
 
-      // Generar los puntos para la curva de Gauss
+      // Generar los puntos para la curva
       const curveData = d3.range(0, maxScore, 1).map((x) => ({ x, y: gaussian(x, averageScore, d3.deviation(scores)) }));
 
-      // Crear un gradiente lineal para el relleno de la curva de Gauss
+      // Crear un gradiente lineal para el relleno
       const gradient = svg.append("defs").append("linearGradient")
         .attr("id", "gaussGradient")
         .attr("gradientUnits", "userSpaceOnUse") // Espacio de usuario para que el gradiente se aplique desde coordenadas del SVG
@@ -56,7 +56,7 @@
       gradient.append("stop").attr("offset", "0%").attr("stop-color", "#86D1D6"); // Color en la parte inferior
       gradient.append("stop").attr("offset", "100%").attr("stop-color", "#8B97B3"); // Color en la parte superior
 
-      // Crear el área rellena de la curva de Gauss usando el gradiente
+      // Crear el área rellena de la curva usando el gradiente
       const area = d3.area()
         .x((d) => xScale(d.x))
         .y0(height - margin.bottom)
@@ -74,7 +74,7 @@
         .attr("x1", xScale(averageScore))
         .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
         .attr("x2", xScale(averageScore))
-        .attr("y2", yScaleGaussian(0)+20) // Terminar en la parte inferior del área rellena
+        .attr("y2", yScaleGaussian(0)+20) // Terminar en la parte superior de la etiqueta
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#circle)")
@@ -126,8 +126,8 @@
       svg
         .append("text")
         .attr("x", xScale(maxScore))
-        .attr("y", height - margin.bottom + 105) // Alinear debajo de la etiqueta del promedio
-        .attr("text-anchor", "end") // Alinear el texto a la derecha
+        .attr("y", height - margin.bottom + 105)
+        .attr("text-anchor", "end")
         .attr("fill", "#2c2c2c")
         .style("font-weight", "semibold")
         .style("font-size", "16px")
@@ -139,20 +139,20 @@
         .attr("x1", xScale(maxScore))
         .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
         .attr("x2", xScale(maxScore))
-        .attr("y2", yScaleGaussian(0)+85) // Terminar en la parte inferior del área rellena
+        .attr("y2", yScaleGaussian(0)+85) // Terminar en la parte superior de la etiqueta
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
         .attr("marker-end", "url(#circle)")
         .attr("marker-start", "url(#arrow)");
 
-      // Eje x (sin ticks y números)
+      // Eje x
       const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
       svg
         .append("g")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(xAxis);
 
-      // Eje y (sin ticks y números)
+      // Eje y
       const yAxisGaussian = d3.axisLeft(yScaleGaussian).tickSize(0).tickFormat("").tickPadding(10);
       svg
         .append("g")

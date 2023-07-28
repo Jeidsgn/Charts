@@ -1,86 +1,100 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Gráfica de Torta con D3.js</title>
-  <meta charset="utf-8">
-  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-</head>
-<body>
-  <svg id="chart" width="190" height="190" style="padding: 0px;"></svg>
+  <head>
+    <title>Gráfica de Torta con D3.js</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+    />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <svg id="chart" width="190" height="190" style="padding: 0px"></svg>
 
-  <script>
-    // Carga el archivo CSV
-    d3.csv("data.csv").then((data) => {
-      // Calcular el total de registros para obtener los porcentajes
-      const totalRecords = data.length;
+    <script>
+      // Carga el archivo CSV
+      d3.csv("data.csv")
+        .then((data) => {
+          // Calcular el total de registros para obtener los porcentajes
+          const totalRecords = data.length;
 
-      // Obtener el conteo de idiomas
-      const languageCounts = {};
-      data.forEach((d) => {
-        const language = d.Idioma;
-        languageCounts[language] = (languageCounts[language] || 0) + 1;
-      });
+          // Obtener el conteo
+          const languageCounts = {};
+          data.forEach((d) => {
+            const language = d.Idioma;
+            languageCounts[language] = (languageCounts[language] || 0) + 1;
+          });
 
-      // Convertir el objeto de conteo en un arreglo de objetos
-      const languageData = Object.keys(languageCounts).map((language) => ({
-        language,
-        count: languageCounts[language],
-        percentage: (languageCounts[language] / totalRecords) * 100,
-      }));
+          // Convertir el objeto de conteo en un arreglo de objetos
+          const languageData = Object.keys(languageCounts).map((language) => ({
+            language,
+            count: languageCounts[language],
+            percentage: (languageCounts[language] / totalRecords) * 100,
+          }));
 
-      // Crear la gráfica
-      const width = 190;
-      const height = 190;
-      const radius = Math.min(width, height) / 2;
-      const svg = d3.select("#chart");
+          // Crear la gráfica
+          const width = 190;
+          const height = 190;
+          const radius = Math.min(width, height) / 2;
+          const svg = d3.select("#chart");
 
-      // Configurar el generador de la gráfica (pie) y el generador de arcos (arc)
-      const pie = d3.pie().value((d) => d.count);
-      const arc = d3.arc().innerRadius(0).outerRadius(radius);
+          // Configurar el generador de la gráfica (pie) y el generador de arcos (arc)
+          const pie = d3.pie().value((d) => d.count);
+          const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
-      // Configurar una escala de colores para asignar colores a cada arco
-      const color = d3.scaleOrdinal()
-        .domain(languageData.map(d => d.language)) // Asignar un color a cada idioma único
-        .range(["#FF7EA4", "#3E73B9", "#4FABB2", "#9040c8"]); // Colores personalizados para cada idioma (puedes agregar más colores si es necesario)
+          // Configurar una escala de colores para asignar colores a cada arco
+          const color = d3
+            .scaleOrdinal()
+            .domain(languageData.map((d) => d.language)) // Asignar un color único
+            .range(["#FF7EA4", "#3E73B9", "#4FABB2", "#9040c8"]); // Colores personalizados
 
-      // Crear un grupo (g) en el centro del SVG
-      const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
+          // Crear un grupo (g) en el centro del SVG
+          const g = svg
+            .append("g")
+            .attr("transform", `translate(${width / 2},${height / 2})`);
 
-      // Crear los arcos para cada idioma y agregarlos al grupo (g)
-      const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
+          // Crear los arcos y agregarlos al grupo (g)
+          const arcs = g
+            .selectAll(".arc")
+            .data(pie(languageData))
+            .enter()
+            .append("g")
+            .attr("class", "arc");
 
-      // Añadir los arcos (arc) al grupo (g)
-      arcs
-        .append("path")
-        .attr("d", arc)
-        .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
-        .attr("stroke", "none")
-        .style("stroke-width", "2px");
+          // Añadir los arcos (arc) al grupo (g)
+          arcs
+            .append("path")
+            .attr("d", arc)
+            .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco
+            .attr("stroke", "none")
+            .style("stroke-width", "2px");
 
-      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje al grupo (g)
-      g.selectAll(".label")
-        .data(pie(languageData))
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("transform", (d) => {
-          const pos = arc.centroid(d);
-          pos[1] -= 6; // Ajustar la posición vertical para que las etiquetas queden arriba de los arcos
-          return `translate(${pos})`;
+          // Agregar etiquetas de texto para mostrar el nombre y el porcentaje al grupo (g)
+          g.selectAll(".label")
+            .data(pie(languageData))
+            .enter()
+            .append("text")
+            .attr("class", "label")
+            .attr("transform", (d) => {
+              const pos = arc.centroid(d);
+              pos[1] -= 6; // Ajustar la posición vertical para que las etiquetas queden sobre de los arcos
+              return `translate(${pos})`;
+            })
+            .style("text-anchor", "middle")
+            .style("font-weight", "semibold")
+            .style("font-size", "10px")
+            .text(
+              (d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`
+            );
+
+          // Tipografía
+          svg.selectAll("text").style("font-family", "Montserrat, sans-serif");
         })
-        .style("text-anchor", "middle")
-        .style("font-weight", "semibold")
-        .style("font-size", "10px")
-        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
-
-      // Tipografía 
-      svg
-        .selectAll("text")
-        .style("font-family", "Montserrat, sans-serif");
-    })
-    .catch((error) => console.error("Error al cargar el archivo CSV:", error));
-  </script>
-</body>
+        .catch((error) =>
+          console.error("Error al cargar el archivo CSV:", error)
+        );
+    </script>
+  </body>
 </html>

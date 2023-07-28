@@ -1,4 +1,4 @@
-# Recopilación de gráficas con D3.js 
+# Recopilación de gráficas con D3.js
 
 Este repositorio contiene gráficas interactivas desarrolladas utilizando la biblioteca D3.js. Estas visualizaciones de datos están diseñadas para ser utilizadas como plantillas en un dashboard para una página web.
 
@@ -29,26 +29,26 @@ Este repositorio contiene gráficas interactivas desarrolladas utilizando la bib
       - [Interacción y Texto](#interacción-y-texto-1)
   - [Referencias](#referencias)
 
-
 ## Descripción General
 
 El objetivo de este proyecto es proporcionar una colección de plantillas de gráficas que pueden utilizar para mostrar datos de manera efectiva y atractiva utilizando javascript.
 
 ## Configuración del SVG
 
-SVG es una forma de renderizar imágenes en la página web. SVG no es una imagen directa, sino solo una forma de crear imágenes usando texto. Las visualizaciones de datos son representaciones visuales y es conveniente usar SVG para representar visualizaciones usando D3.js. SVG es como el lienzo en el que podemos pintar diferentes formas. 
+SVG es una forma de renderizar imágenes en la página web. SVG no es una imagen directa, sino solo una forma de crear imágenes usando texto. Las visualizaciones de datos son representaciones visuales y es conveniente usar SVG para representar visualizaciones usando D3.js. SVG es como el lienzo en el que podemos pintar diferentes formas.
+
 - **width** y **height**: Establecen el ancho y la altura del SVG.
 - **svg**: Selecciona el elemento con el ID "chart" y crea el contenedor SVG para la gráfica.
 - **radius**: Calcula el radio de una gráfica circular como la mitad del valor mínimo entre el ancho y la altura del SVG. Esto asegura que la gráfica tenga un tamaño adecuado y se ajuste dentro del SVG.
 
 #### Configuración de las Gráficas
 
-- **xScale:** Permite ajustar la posición horizontal de los puntos en función de las fechas.
-- **yScale:** Permite ajustar la posición vertical de los puntos en función de la cantidad de usuarios.
+- **xScale:** Permite ajustar la posición horizontal de los puntos.
+- **yScale:** Permite ajustar la posición vertical de los puntos.
 
 ## Gráficas Disponibles
 
-***
+---
 
 ### Curve
 
@@ -58,18 +58,19 @@ curve.html: Una gráfica de línea suavizada. Ideal para representar tendencias 
 
 - **d3.line()** La curva suave que conecta los puntos de datos en la gráfica. Los puntos de la curva se colocan en función de sus fechas (eje x) y el índice correspondiente en el conjunto de datos (eje y).
 - **d3.area()** Área rellena bajo la curva.
-- El degradado lineal se crea mediante el elemento **linearGradient** en el bloque *defs*. Este degradado se utiliza para colorear el área bajo la curva.
+- El degradado lineal se crea mediante el elemento **linearGradient** en el bloque _defs_. Este degradado se utiliza para colorear el área bajo la curva.
 
 #### Interacción y Texto
 
 - **hoverLine:** Línea vertical que se muestra al hacer hover sobre la gráfica. Se coloca en la posición del mouse en el eje x y se extiende desde el eje y hasta el punto de la curva más cercano al mouse. Permite visualizar la fecha y cantidad de usuarios en un momento específico.
 - **infoGroup:** Grupo que contiene dos elementos de texto que muestran la fecha y la cantidad de usuarios registrados correspondientes al punto de la curva más cercano al mouse.
 
-*Nota: Si utilizas tus propios datos, asegúrate de que el formato de fecha en el archivo CSV sea reconocible por la función d3.timeParse(). De lo contrario, es posible que debas ajustar la lógica de procesamiento de fechas en el código.*
+_Nota: Si utilizas tus propios datos, asegúrate de que el formato de fecha en el archivo CSV sea reconocible por la función d3.timeParse(). De lo contrario, es posible que debas ajustar la lógica de procesamiento de fechas en el código._
 
-***
+---
 
 ### Cake
+
 cake.html: Un gráfico de pastel que muestra la proporción de diferentes categorías en un conjunto de datos. Útil para resaltar la composición relativa de elementos.
 
 #### Procesamiento de Datos
@@ -89,9 +90,10 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 - A cada arco se le asigna un color específico mediante el atributo "fill" que se obtiene de la función `color(d.data.language)`.
 - La posición de las etiquetas de texto se ajusta mediante la función `arc.centroid(d)` para que queden arriba de los arcos.
 
-***
+---
 
 ### Spider
+
 spider.html: Una gráfica de radar o araña que permite comparar múltiples variables en diferentes categorías. Es ideal para mostrar perfiles multivariables. Muestra la distribución de países más repetidos en un conjunto de datos y representa la cantidad de repeticiones de cada país en forma de "telaraña" con ejes radiales y círculos tangenciales.
 
 #### Procesamiento de Datos
@@ -110,11 +112,12 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 - Se crea el área sombreada que une los países mediante el uso de la función `d3.areaRadial()`.
 - Se agregan etiquetas de texto en forma de emojis que muestran el país correspondiente a cada eje radial. Los emojis son seleccionados del objeto `emojis`.
 
-*Nota: Puedes modificar los emojis proporcionados en el objeto `emojis` para representar los países seleccionados en tu conjunto de datos.*
+_Nota: Puedes modificar los emojis proporcionados en el objeto `emojis` para representar los países seleccionados en tu conjunto de datos._
 
-***
+---
 
 ### Stacked column
+
 stacked_column.html: Contiene una visualización de una gráfica de barras apiladas horizontal. La gráfica muestra la distribución de usuarios en diferentes grupos de edades.
 
 #### Procesamiento de Datos
@@ -131,7 +134,7 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 - Se crean etiquetas de texto (`<text>`) para mostrar los nombres de cada grupo de edades. Las etiquetas se colocan en el centro de cada barra apilada y muestran el nombre del grupo de edades.
 - Se utiliza la función `calculateAge` para calcular la edad a partir de la fecha de nacimiento de cada usuario en el conjunto de datos.
 
-***
+---
 
 ### Gauss
 
@@ -149,15 +152,15 @@ Antes de crear la gráfica, el archivo realiza un procesamiento de datos para ob
 
 - **curveData:** Es un arreglo de puntos utilizados para generar la curva de Gauss.
 - **d3.area()** Área rellena bajo la curva de Gauss.
-- Se crea un gradiente lineal utilizando el elemento **linearGradient** en el bloque *defs*. Este gradiente se utiliza para colorear el área bajo la curva de Gauss.
+- Se crea un gradiente lineal utilizando el elemento **linearGradient** en el bloque _defs_. Este gradiente se utiliza para colorear el área bajo la curva de Gauss.
 
 #### Interacción y Texto
 
-- **averageLine:** Línea vertical que muestra la posición del *promedio* de los puntajes en la distribución.
-- **maxLine:** Línea vertical que muestra la posición del puntaje *máximo* en la distribución. 
-- **Marcadores:** Permiten agregar elementos decorativos en los extremos de la línea. En este caso, se utiliza el marcador de flecha (#arrow) en el extremo superior de la línea y el de circulo (#circle) en el inferior. El marcador se define previamente en el bloque *defs* y está configurado para tener una forma especifica.
+- **averageLine:** Línea vertical que muestra la posición del _promedio_ de los puntajes en la distribución.
+- **maxLine:** Línea vertical que muestra la posición del puntaje _máximo_ en la distribución.
+- **Marcadores:** Permiten agregar elementos decorativos en los extremos de la línea. En este caso, se utiliza el marcador de flecha (#arrow) en el extremo superior de la línea y el de circulo (#circle) en el inferior. El marcador se define previamente en el bloque _defs_ y está configurado para tener una forma especifica.
 
-***
+---
 
 ## Referencias
 
