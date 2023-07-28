@@ -111,16 +111,17 @@
         .attr("fill", "#2c2c2c")
         .text(`Máximo: ${maxScore}`);
 
-        // Línea vertical para el puntaje máximo
+      // Línea vertical para el puntaje máximo
         const maxLine = svg
         .append("line")
         .attr("x1", xScale(maxScore))
-        .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
+        .attr("y1", yScaleGaussian(maxGaussianValue)) // Iniciar en la parte superior del área rellena
         .attr("x2", xScale(maxScore))
-        .attr("y2", yScaleGaussian(maxGaussianValue)) // Terminar en la parte superior del área rellena
+        .attr("y2", yScaleGaussian(0)-10) // Terminar en la parte inferior del área rellena
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
-        .attr("marker-end", "url(#arrow)");
+        .attr("marker-end", "url(#arrow)")
+        .attr("marker-start", "url(#arrow)");
 
       // Eje x (sin ticks y números)
       const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);

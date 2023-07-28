@@ -56,8 +56,8 @@
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
-        .attr("stroke", "#8B97B3")
-        .style("z-index", 0)
+        .attr("stroke", "none")
+        .style("z-index", 1)
         .style("stroke-width", "2px");
 
       // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
@@ -70,7 +70,7 @@
         })
         .style("text-anchor", "middle")
         .style("font-weight", "semibold")
-        .style("z-index", 1) // Asegurar que las etiquetas tengan un z-index mayor que los arcos
+        .style("z-index", 2) // Asegurar que las etiquetas tengan un z-index mayor que los arcos
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
 
 
