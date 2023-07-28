@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="190" height="250" style="padding: 0px;"></svg>
+  <svg id="chart" width="190" height="230" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -73,7 +73,7 @@
         .append("line")
         .attr("x1", xScale(averageScore))
         .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
-        .attr("x1", xScale(averageScore))
+        .attr("x2", xScale(averageScore))
         .attr("y2", yScaleGaussian(0)+20) // Terminar en la parte inferior del área rellena
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
@@ -148,6 +148,7 @@
         .attr("dy", "0.3em")
         .style("text-anchor", "middle")
         .text("Usuarios");
+      yAxisG.select(".domain").remove(); // Remover la línea del eje y
       // Tipografía 
       svg
         .selectAll("text").style("font-family", "Montserrat, sans-serif");
