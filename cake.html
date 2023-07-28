@@ -51,13 +51,14 @@
       // Crear los arcos para cada idioma
       const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
 
-      // Añadir los arcos (arc) al grupo (g)
+      // Añadir los arcos (arc) al grupo (g) y elevarlos sobre las etiquetas
       arcs
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
         .attr("stroke", "none")
-        .style("stroke-width", "2px");
+        .style("stroke-width", "2px")
+        .raise(); // Elevar los arcos sobre las etiquetas
 
       // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
       arcs
