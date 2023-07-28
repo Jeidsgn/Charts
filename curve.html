@@ -54,12 +54,21 @@
         .y((_, i) => yScale(i))
         .curve(d3.curveStepAfter); // Cambiar la interpolación a Step After
 
+      // Crear el área bajo la curva rellena
+      const area = d3
+        .area()
+        .x((d) => xScale(d))
+        .y0(yScale(0))
+        .y1((_, i) => yScale(i))
+        .curve(d3.curveStepAfter); // Usar la misma interpolación que la curva
+
+      // Agregar el área bajo la curva al gráfico
       svg
         .append("path")
         .datum(dates)
         .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
         .attr("stroke", "none") // Sin borde
-        .attr("d", line);
+        .attr("d", area);
 
       // Línea vertical para mostrar la información al hacer hover
       const hoverLine = svg
