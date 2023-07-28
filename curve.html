@@ -27,7 +27,22 @@
       const xScale = d3.scaleTime().domain(d3.extent(dates)).range([margin.left, width - margin.right]);
       const yScale = d3.scaleLinear().domain([0, data.length]).range([height - margin.bottom, margin.top]);
 
-      // Función para crear el degradado lineal
+      // Función de interpolación de curva B-spline
+      const lineGenerator = d3.line().curve(d3.curveBasis);
+
+      // Función para muestrear los datos y obtener puntos aproximados
+      const sampleData = (data, count) => {
+        const step = Math.ceil(data.length / count);
+        return data.filter((d, i) => i % step === 0);
+      };
+
+      // Crear la curva suavizada de usuarios registrados
+      const sampledDates = sampleData(dates, 30); // Obtener 30 puntos aproximados
+      const sampledPoints = sampledDates.map((date, i) => [xScale(date), yScale(i)]);
+
+      const path = lineGenerator(sampledPoints);
+
+      // Crear el degradado lineal
       const defs = svg.append("defs");
       const linearGradient = defs
         .append("linearGradient")
@@ -38,28 +53,16 @@
         .attr("x2", 0)
         .attr("y2", yScale(data.length));
 
-      linearGradient
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "#EF94AC");
-      linearGradient
-        .append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", "#73D0EE");
+      linearGradient.append("stop").attr("offset", "0%").attr("stop-color", "#EF94AC");
+      linearGradient.append("stop").attr("offset", "100%").attr("stop-color", "#73D0EE");
 
-      // Crear la curva suavizada de usuarios registrados
-      const area = d3
-        .area()
-        .x((d) => xScale(d))
-        .y0(yScale(0))
-        .y1((d, i) => yScale(i))
-        .curve(d3.curveCatmullRom.alpha(0.5)); // Aumentar el factor de suavizado
-
+      // Dibujar la curva suavizada
       svg
         .append("path")
-        .datum(dates)
-        .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
-        .attr("d", area);
+        .attr("d", path)
+        .attr("fill", "none")
+        .attr("stroke", "url(#linear-gradient)")
+        .attr("stroke-width", 2);
 
       // Línea vertical para mostrar la información al hacer hover
       const hoverLine = svg
