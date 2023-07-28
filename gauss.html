@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="220" height="250" style="padding: 0px;"></svg>
+  <svg id="chart" width="200" height="250" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -134,6 +134,7 @@
       svg
         .append("g")
         .attr("transform", `translate(${margin.left},0)`)
+        .attr("stroke", "none")
         .call(yAxisGaussian);
 
       // Etiqueta para el eje y de la distribución de Gauss
