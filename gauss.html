@@ -115,8 +115,8 @@
       svg
         .append("text")
         .attr("x", xScale(averageScore))
-        .attr("y", height - margin.bottom + 50)
-        .attr("text-anchor", "semibold", "middle") // Alinear el texto en el centro horizontal
+        .attr("y", height - margin.bottom + 55)
+        .attr("text-anchor", "middle") // Alinear el texto en el centro horizontal
         .attr("fill", "#2c2c2c")
         .text(`Promedio: ${averageScore.toFixed(2)}`);
 
@@ -124,8 +124,8 @@
       svg
         .append("text")
         .attr("x", xScale(maxScore))
-        .attr("y", height - margin.bottom + 70) // Alinear debajo de la etiqueta del promedio
-        .attr("text-anchor", "semibold","end") // Alinear el texto a la derecha
+        .attr("y", height - margin.bottom + 85) // Alinear debajo de la etiqueta del promedio
+        .attr("text-anchor", "semibold, end") // Alinear el texto a la derecha
         .attr("fill", "#2c2c2c")
         .text(`Máximo: ${maxScore}`);
 
