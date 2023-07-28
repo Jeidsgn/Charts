@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfica de Curva Suavizada con D3.js</title>
+  <title>Gráfica de Curva con D3.js</title>
   <meta charset="utf-8">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
@@ -17,11 +17,7 @@
       const dates = data.map((d) => new Date(d.Registro));
       dates.sort((a, b) => a - b);
 
-      // Reducir la cantidad de puntos para suavizar la curva
-      const skip = Math.ceil(dates.length / 200); // Ajusta el valor para reducir o aumentar la cantidad de puntos
-      const simplifiedDates = dates.filter((_, i) => i % skip === 0);
-
-      // Crear la gráfica de curva suavizada
+      // Crear la gráfica de curva con datos sin suavizado
       const width = 600;
       const height = 300;
       const margin = { top: 30, right: 30, bottom: 0, left: 30 };
@@ -51,16 +47,16 @@
         .attr("offset", "100%")
         .attr("stop-color", "#73D0EE");
 
-      // Crear la curva suavizada de usuarios registrados
+      // Crear la curva de usuarios registrados
       const line = d3
         .line()
         .x((d) => xScale(d))
         .y((_, i) => yScale(i))
-        .curve(d3.curveLinear); // Cambiar la interpolación a lineal
+        .curve(d3.curveStepAfter); // Cambiar la interpolación a Step After
 
       svg
         .append("path")
-        .datum(simplifiedDates)
+        .datum(dates)
         .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
         .attr("stroke", "none") // Sin borde
         .attr("d", line);
