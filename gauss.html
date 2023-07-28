@@ -20,7 +20,7 @@
 
       // Crear la gráfica de Gauss
       const width = 190;
-      const height = 120;
+      const height = 90;
       const margin = { top: 10, right: 5, bottom: 10, left: 5 };
       const svg = d3.select("#chart");
 
@@ -69,15 +69,16 @@
         .attr("d", area);
 
       // Crear la línea vertical para el promedio
-      const averageLine = svg
+      const averageLine = svg 
         .append("line")
         .attr("x1", xScale(averageScore))
-        .attr("y1", margin.top)
-        .attr("x2", xScale(averageScore))
-        .attr("y2", height - margin.bottom)
+        .attr("y1", yScaleGaussian(0)) // Iniciar en la parte inferior del área rellena
+        .attr("x1", xScale(averageScore))
+        .attr("y2", yScaleGaussian(0)+20) // Terminar en la parte inferior del área rellena
         .attr("stroke", "#2c2c2c")
         .attr("stroke-width", "2px")
-        .attr("marker-end", "url(#arrow)");
+        .attr("marker-end", "url(#circle)")
+        .attr("marker-start", "url(#arrow)");
 
       // Agregar el marcador de flecha
       svg
