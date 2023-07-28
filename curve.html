@@ -17,6 +17,11 @@
       const dates = data.map((d) => new Date(d.Registro));
       dates.sort((a, b) => a - b);
 
+      // Limitar la cantidad de puntos a mostrar
+      const maxPoints = 30;
+      const step = Math.floor(dates.length / maxPoints);
+      const sampledDates = dates.filter((d, i) => i % step === 0);
+
       // Crear la gráfica de curva suavizada
       const width = 600;
       const height = 300;
@@ -24,25 +29,10 @@
       const svg = d3.select("#chart");
 
       // Escalas
-      const xScale = d3.scaleTime().domain(d3.extent(dates)).range([margin.left, width - margin.right]);
-      const yScale = d3.scaleLinear().domain([0, data.length]).range([height - margin.bottom, margin.top]);
+      const xScale = d3.scaleTime().domain(d3.extent(sampledDates)).range([margin.left, width - margin.right]);
+      const yScale = d3.scaleLinear().domain([0, sampledDates.length]).range([height - margin.bottom, margin.top]);
 
-      // Función de interpolación de curva B-spline
-      const lineGenerator = d3.line().curve(d3.curveBasis);
-
-      // Función para muestrear los datos y obtener puntos aproximados
-      const sampleData = (data, count) => {
-        const step = Math.ceil(data.length / count);
-        return data.filter((d, i) => i % step === 0);
-      };
-
-      // Crear la curva suavizada de usuarios registrados
-      const sampledDates = sampleData(dates, 30); // Obtener 30 puntos aproximados
-      const sampledPoints = sampledDates.map((date, i) => [xScale(date), yScale(i)]);
-
-      const path = lineGenerator(sampledPoints);
-
-      // Crear el degradado lineal
+      // Función para crear el degradado lineal
       const defs = svg.append("defs");
       const linearGradient = defs
         .append("linearGradient")
@@ -51,18 +41,42 @@
         .attr("x1", 0)
         .attr("y1", yScale(0))
         .attr("x2", 0)
-        .attr("y2", yScale(data.length));
+        .attr("y2", yScale(sampledDates.length));
 
-      linearGradient.append("stop").attr("offset", "0%").attr("stop-color", "#EF94AC");
-      linearGradient.append("stop").attr("offset", "100%").attr("stop-color", "#73D0EE");
+      linearGradient
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#EF94AC");
+      linearGradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#73D0EE");
 
-      // Dibujar la curva suavizada
+      // Aplicar filtro para suavizar la curva
+      const curveData = d3.curveCardinal.tension(0.5)(sampledDates.map((d, i) => [xScale(d), yScale(i)]));
+
+      // Crear la curva suavizada de usuarios registrados
+      const area = d3
+        .area()
+        .x((d) => d[0])
+        .y0(yScale(0))
+        .y1((d) => d[1]);
+
       svg
         .append("path")
-        .attr("d", path)
+        .datum(curveData)
+        .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
+        .attr("d", area);
+
+      // Elemento rect para mantener la línea del hover continua
+      const hoverRect = svg
+        .append("rect")
+        .attr("x", margin.left)
+        .attr("y", margin.top)
+        .attr("width", width - margin.left - margin.right)
+        .attr("height", height - margin.top - margin.bottom)
         .attr("fill", "none")
-        .attr("stroke", "url(#linear-gradient)")
-        .attr("stroke-width", 2);
+        .attr("pointer-events", "all"); // Permitir eventos del mouse en el rectángulo
 
       // Línea vertical para mostrar la información al hacer hover
       const hoverLine = svg
@@ -80,7 +94,7 @@
         .attr("text-anchor", "middle")
         .attr("fill", "#2c2c2c")
         .attr("font-size", "12px")
-        .attr("y", yScale(data.length) - 10);
+        .attr("y", yScale(sampledDates.length) - 10);
 
       // Texto para la cantidad de usuarios
       infoGroup
@@ -88,11 +102,11 @@
         .attr("text-anchor", "middle")
         .attr("fill", "#2c2c2c")
         .attr("font-size", "12px")
-        .attr("y", yScale(data.length) + 10);
+        .attr("y", yScale(sampledDates.length) + 10);
 
       // Función para mostrar la línea vertical y el texto al hacer hover
       const handleMousemove = (event) => {
-        const mouseX = d3.pointer(event)[0]; // Obtener la posición X del mouse en relación con el documento
+        const mouseX = d3.pointer(event, hoverRect.node())[0]; // Obtener la posición X del mouse en relación con el rectángulo
         const date = xScale.invert(mouseX);
 
         // Buscar el índice más cercano en el arreglo de fechas
@@ -102,15 +116,15 @@
 
         // Mostrar la línea vertical en el punto del hover
         hoverLine
-          .attr("x1", mouseX)
-          .attr("x2", mouseX)
+          .attr("x1", mouseX + margin.left)
+          .attr("x2", mouseX + margin.left)
           .attr("y1", yScale(0))
-          .attr("y2", yScale(data.length))
+          .attr("y2", yScale(sampledDates.length))
           .style("opacity", 1);
 
         // Mostrar el texto de la fecha y cantidad de usuarios
         infoGroup
-          .attr("transform", `translate(${mouseX},${yScale(data.length)})`)
+          .attr("transform", `translate(${mouseX + margin.left},${yScale(sampledDates.length)})`)
           .style("opacity", 1);
 
         infoGroup.select("text:nth-child(1)").text(d3.timeFormat("%Y-%m-%d")(date));
@@ -123,8 +137,8 @@
         infoGroup.style("opacity", 0);
       };
 
-      // Añadir los eventos de hover a la gráfica
-      svg.on("mousemove", handleMousemove).on("mouseout", handleMouseout);
+      // Añadir los eventos de hover al rectángulo
+      hoverRect.on("mousemove", handleMousemove).on("mouseout", handleMouseout);
 
       // Eje x (sin ticks y números)
       const xAxis = d3.axisBottom(xScale).tickSize(0).tickFormat("").tickPadding(10);
