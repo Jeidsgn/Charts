@@ -62,14 +62,20 @@
       // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
       arcs
         .append("text")
-        .attr("transform", (d) => `translate(${arc.centroid(d)})`)
-        .attr("dy", "0.15em")
-        .style("text-anchor", "semibold")
-        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(2)}%)`);
+        .attr("transform", (d) => {
+            const pos = arc.centroid(d);
+            pos[1] -= 6; // Ajustar la posición vertical para que las etiquetas queden arriba de los arcos
+            return `translate(${pos})`;
+        })
+        .style("text-anchor", "middle")
+        .style("font-weight", "bold")
+        .style("z-index", 1) // Asegurar que las etiquetas tengan un z-index mayor que los arcos
+        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
 
-      // Tipografía 
-      svg
-        .selectAll("text").style("font-family", "Montserrat, sans-serif");
+
+        // Tipografía 
+       svg
+            .selectAll("text").style("font-family", "Montserrat, sans-serif");
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
   </script>
