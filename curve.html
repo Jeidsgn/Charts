@@ -117,7 +117,7 @@
 
         // Mostrar el texto de la fecha y cantidad de usuarios
         infoGroup
-          .attr("transform", `translate(${mouseX},${yScale(data.length)})`)
+          .attr("transform", `translate(${mouseX},${yValue})`)
           .style("opacity", 1);
 
         infoGroup.select("text:nth-child(1)").text(d3.timeFormat("%Y-%m-%d")(date));
@@ -143,7 +143,8 @@
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .style("font-family", "Montserrat, sans-serif") // Agregar la tipografía Montserrat
-        .text("Cantidad de usuarios registrados");
+        .text("Cantidad de usuarios registrados")
+        .selectAll("text").style("font-family", "Montserrat, sans-serif");
 
     })
     .catch((error) => console.error("Error al cargar el archivo CSV:", error));
