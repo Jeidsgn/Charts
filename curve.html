@@ -52,7 +52,7 @@
         .line()
         .x((d) => xScale(d))
         .y((_, i) => yScale(i))
-        .curve(d3.curveStepAfter); // Cambiar la interpolación a Step After
+        .curve(d3.curveBasis); // Cambiar la interpolación a Bezier
 
       // Crear el área bajo la curva rellena
       const area = d3
@@ -60,7 +60,7 @@
         .x((d) => xScale(d))
         .y0(yScale(0))
         .y1((_, i) => yScale(i))
-        .curve(d3.curveStepAfter); // Usar la misma interpolación que la curva
+        .curve(d3.curveBasis); // Usar la misma interpolación Bezier que la curva
 
       // Agregar el área bajo la curva al gráfico
       svg
