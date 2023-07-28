@@ -93,6 +93,23 @@
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M0,-5L10,0L0,5");
+            
+      // Agregar el marcador de círculo
+      svg
+        .append("defs")
+        .append("marker")
+        .attr("id", "circle")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 5)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("circle")
+        .attr("cx", 5)
+        .attr("cy", 0)
+        .attr("r", 2)
+        .attr("fill", "#2c2c2c");
 
       // Etiqueta del promedio
       svg
@@ -144,7 +161,7 @@
       svg
         .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", margin.left - 5)
+        .attr("y", margin.left - 15)
         .attr("x", 0 - height / 2)
         .attr("dy", "0.3em")
         .style("text-anchor", "middle")
