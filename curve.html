@@ -105,14 +105,15 @@
         const bisectDate = d3.bisector((d) => d).left;
         const index = bisectDate(dates, date, 1);
         const usersCount = index;
+        const yValue = yScale(usersCount); // Obtener el valor de y para el punto de la curva más cercano
 
         // Mostrar la línea vertical en el punto del hover
         hoverLine
-          .attr("x1", mouseX)
-          .attr("x2", mouseX)
-          .attr("y1", yScale(0))
-          .attr("y2", yScale(data.length))
-          .style("opacity", 1);
+        .attr("x1", mouseX)
+        .attr("x2", mouseX)
+        .attr("y1", yScale(0))
+        .attr("y2", yValue)
+        .style("opacity", 1);
 
         // Mostrar el texto de la fecha y cantidad de usuarios
         infoGroup
