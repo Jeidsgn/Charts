@@ -9,10 +9,16 @@
       font-family: "Montserrat", sans-serif;
     }
 
+    /* Estilos para el contenedor principal */
+    .container {
+      width: 1024px;
+      margin: 0 auto; /* Centrar el contenedor en la página */
+    }
+
     /* Estilos para cada sección que contiene una gráfica */
     section {
       background-color: #C5C4CD;
-      margin: 20px auto;
+      margin: 20px 0;
       padding: 20px;
       border-radius: 8px; /* Bordes redondeados para efecto de tarjeta */
       display: inline-block; /* Mostrar las secciones una al lado de la otra */
@@ -28,27 +34,30 @@
   </style>
 </head>
 <body>
-  <h1>Índice de Gráficas</h1>
-  <section>
-    <h2>Spider</h2>
-    <iframe src="spider_chart.html" frameborder="0" width="520" height="520"></iframe>
-  </section>
-  <section>
-    <h2>Cake</h2>
-    <iframe src="cake.html" frameborder="0" width="550" height="550"></iframe>
-  </section>
-  <section>
-    <h2>Gauss</h2>
-    <iframe src="gauss.html" frameborder="0" width="620" height="440"></iframe>
-  </section>
-  <section>
-    <h2>Stacked Column</h2>
-    <iframe src="stacked_column.html" frameborder="0" width="660" height="140"></iframe>></iframe>
-  </section>
-  <section>
-    <h2>Curve</h2>
-    <iframe src="curve.html" frameborder="0" width="720" height="420"></iframe>></iframe>
-  </section>
+  <div class="container"> <!-- Agregar el contenedor principal -->
+    <h1>Índice de Gráficas</h1>
+    <section>
+      <h2>Curve</h2>
+      <iframe src="curve.html" frameborder="0" width="500" height="250"></iframe>></iframe>
+    </section>
+    <section>
+      <h2>Cake</h2>
+      <iframe src="cake.html" frameborder="0" width="220" height="250"></iframe>
+    </section>
+    <section>
+      <h2>Spider</h2>
+      <iframe src="spider_chart.html" frameborder="0" width="250" height="250"></iframe>
+    </section>
+    <section>
+      <h2>Stacked Column</h2>
+      <iframe src="stacked_column.html" frameborder="0" width="980" height="140"></iframe>></iframe>
+    </section>
+    <section>
+      <h2>Gauss</h2>
+      <iframe src="gauss.html" frameborder="0" width="220" height="250"></iframe>
+    </section>
+  </div> <!-- Cerrar el contenedor principal -->
+
   <!-- Agrega más secciones para otras gráficas si es necesario -->
 </body>
 </html>
