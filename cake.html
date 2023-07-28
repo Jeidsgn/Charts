@@ -48,19 +48,19 @@
       // Crear un grupo (g) en el centro del SVG
       const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
 
-      // Crear los arcos para cada idioma y agregarlos al grupo (g)
-      const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
+      // Crear grupos (g) para cada par de arco y etiqueta correspondientes
+      const arcsAndLabels = g.selectAll(".arc-and-label").data(pie(languageData)).enter().append("g").attr("class", "arc-and-label");
 
-      // Añadir los arcos (arc) al grupo (g)
-      arcs
+      // Añadir los arcos (arc) a cada grupo (g)
+      arcsAndLabels
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
         .attr("stroke", "none")
         .style("stroke-width", "2px");
 
-      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje y agregarlas al grupo (g)
-      const labels = arcs
+      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje a cada grupo (g)
+      arcsAndLabels
         .append("text")
         .attr("transform", (d) => {
             const pos = arc.centroid(d);
@@ -71,13 +71,10 @@
         .style("font-weight", "semibold")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
 
-      // Reorganizar el orden de los elementos para asegurar que las etiquetas queden encima de los arcos
-      g.selectAll(".arc").each(function(d, i) {
-        const arcNode = this;
-        const labelNode = labels._groups[0][i];
-        g.node().appendChild(labelNode); // Mover la etiqueta al final del grupo (g) para que quede encima del arco correspondiente
-        g.node().appendChild(arcNode); // Mover el arco después de la etiqueta para que quede debajo
-      });
+      // Ordenar los grupos (g) para que las etiquetas queden sobre los arcos
+      arcsAndLabels
+        .selectAll("g")
+        .sort((a, b) => a.endAngle - b.endAngle);
 
       // Tipografía 
       svg
