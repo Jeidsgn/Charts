@@ -1,8 +1,4 @@
-# Recopilación de gráficas con D3.js
-
-Este repositorio contiene gráficas interactivas desarrolladas utilizando la biblioteca D3.js. Estas visualizaciones de datos están diseñadas para ser utilizadas como plantillas en un dashboard para una página web.
-Se pueden ver aquí: https://jeidsgn.github.io/Charts/
-
+##Contenido
 - [Recopilación de gráficas con D3.js](#recopilación-de-gráficas-con-d3js)
   - [Descripción General](#descripción-general)
   - [Configuración del SVG](#configuración-del-svg)
@@ -29,6 +25,11 @@ Se pueden ver aquí: https://jeidsgn.github.io/Charts/
       - [Creación de la Gráfica](#creación-de-la-gráfica-4)
       - [Interacción y Texto](#interacción-y-texto-1)
   - [Referencias](#referencias)
+
+# Recopilación de gráficas con D3.js
+
+Este repositorio contiene gráficas interactivas desarrolladas utilizando la biblioteca D3.js. Estas visualizaciones de datos están diseñadas para ser utilizadas como plantillas en un dashboard para una página web.
+Se pueden ver aquí: https://jeidsgn.github.io/Charts/
 
 ## Descripción General
 
