@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="450" height="200" style="padding: 0px;"></svg>
+  <svg id="chart" width="430" height="180" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -18,8 +18,8 @@
       dates.sort((a, b) => a - b);
 
       // Crear la gráfica de curva con datos sin suavizado
-      const width = 450;
-      const height = 200;
+      const width = 430;
+      const height = 180;
       const margin = { top: 15, right: 15, bottom: 0, left: 15 };
       const svg = d3.select("#chart");
 
@@ -145,7 +145,7 @@
         .attr("dy", "0.7em")
         .style("text-anchor", "middle")
         .style("font-family", "Montserrat, sans-serif") // Agregar la tipografía Montserrat
-        .text("Cantidad de usuarios registrados")
+        .text("Usuarios registrados")
         .selectAll("text").style("font-family", "Montserrat, sans-serif");
 
     })

@@ -63,8 +63,8 @@
       arcs
         .append("text")
         .attr("transform", (d) => `translate(${arc.centroid(d)})`)
-        .attr("dy", "0.25em")
-        .style("text-anchor", "middle")
+        .attr("dy", "0.15em")
+        .style("text-anchor", "semibold")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(2)}%)`);
 
       // Tipografía 
