@@ -62,6 +62,7 @@
         .append("path")
         .datum(simplifiedDates)
         .attr("fill", "url(#linear-gradient)") // Usar el degradado lineal como relleno
+        .attr("stroke", "none") // Sin borde
         .attr("d", line);
 
       // Línea vertical para mostrar la información al hacer hover
