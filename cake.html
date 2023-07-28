@@ -71,8 +71,8 @@
           return `translate(${pos})`;
         })
         .style("text-anchor", "middle")
-        .style("font-weight", "bold") // Establecer el estilo en negrita (bold)
-        .style("font-size", "10px") // Disminuir el tamaño de la fuente
+        .style("font-weight", "semibold")
+        .style("font-size", "10px")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
 
       // Tipografía 
