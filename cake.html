@@ -48,33 +48,31 @@
       // Crear un grupo (g) en el centro del SVG
       const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
 
-      // Crear grupos (g) para cada par de arco y etiqueta correspondientes
-      const arcsAndLabels = g.selectAll(".arc-and-label").data(pie(languageData)).enter().append("g").attr("class", "arc-and-label");
+      // Crear los arcos para cada idioma y agregarlos al grupo (g)
+      const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
 
-      // Añadir los arcos (arc) a cada grupo (g)
-      arcsAndLabels
+      // Añadir los arcos (arc) al grupo (g)
+      arcs
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
         .attr("stroke", "none")
         .style("stroke-width", "2px");
 
-      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje a cada grupo (g)
-      arcsAndLabels
+      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje al grupo (g)
+      g.selectAll(".label")
+        .data(pie(languageData))
+        .enter()
         .append("text")
+        .attr("class", "label")
         .attr("transform", (d) => {
-            const pos = arc.centroid(d);
-            pos[1] -= 6; // Ajustar la posición vertical para que las etiquetas queden arriba de los arcos
-            return `translate(${pos})`;
+          const pos = arc.centroid(d);
+          pos[1] -= 6; // Ajustar la posición vertical para que las etiquetas queden arriba de los arcos
+          return `translate(${pos})`;
         })
         .style("text-anchor", "middle")
         .style("font-weight", "semibold")
         .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
-
-      // Ordenar los grupos (g) para que las etiquetas queden sobre los arcos
-      arcsAndLabels
-        .selectAll("g")
-        .sort((a, b) => a.endAngle - b.endAngle);
 
       // Tipografía 
       svg
