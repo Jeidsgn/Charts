@@ -48,19 +48,24 @@
       // Crear un grupo (g) en el centro del SVG
       const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
 
-      // Crear los arcos para cada idioma
-      const arcs = g.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
+      // Crear un subgrupo para los arcos
+      const arcsGroup = g.append("g");
 
-      // Añadir los arcos (arc) al grupo (g) y elevarlos sobre las etiquetas
+      // Crear los arcos para cada idioma y agregarlos al subgrupo
+      const arcs = arcsGroup.selectAll(".arc").data(pie(languageData)).enter().append("g").attr("class", "arc");
+
+      // Añadir los arcos (arc) al subgrupo
       arcs
         .append("path")
         .attr("d", arc)
         .attr("fill", (d) => color(d.data.language)) // Asignar un color a cada arco según el idioma
         .attr("stroke", "none")
-        .style("stroke-width", "2px")
-        .raise(); // Elevar los arcos sobre las etiquetas
+        .style("stroke-width", "2px");
 
-      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje
+      // Crear un subgrupo para las etiquetas
+      const labelsGroup = g.append("g");
+
+      // Agregar etiquetas de texto para mostrar el nombre del idioma y el porcentaje y agregarlas al subgrupo de etiquetas
       arcs
         .append("text")
         .attr("transform", (d) => {
@@ -70,8 +75,10 @@
         })
         .style("text-anchor", "middle")
         .style("font-weight", "semibold")
-        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`)
-        .raise(); // Elevar las etiquetas sobre los arcos
+        .text((d) => `${d.data.language} (${d.data.percentage.toFixed(0)}%)`);
+
+      // Elevar el subgrupo de etiquetas sobre el subgrupo de arcos
+      labelsGroup.raise();
 
       // Tipografía 
       svg
