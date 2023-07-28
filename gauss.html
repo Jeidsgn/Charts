@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <svg id="chart" width="200" height="250" style="padding: 0px;"></svg>
+  <svg id="chart" width="190" height="250" style="padding: 0px;"></svg>
 
   <script>
     // Carga el archivo CSV
@@ -19,7 +19,7 @@
       const maxScore = d3.max(scores);
 
       // Crear la gráfica de Gauss
-      const width = 200;
+      const width = 190;
       const height = 120;
       const margin = { top: 10, right: 5, bottom: 10, left: 5 };
       const svg = d3.select("#chart");
@@ -92,15 +92,6 @@
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M0,-5L10,0L0,5");
-
-      // Etiqueta del promedio
-      svg
-        .append("text")
-        .attr("x", xScale(averageScore))
-        .attr("y", height - margin.bottom + 40)
-        .attr("text-anchor", "semibold")
-        .attr("fill", "#2c2c2c")
-        .text(`Promedio: ${averageScore.toFixed(2)}`);
 
       // Etiqueta del promedio
       svg
